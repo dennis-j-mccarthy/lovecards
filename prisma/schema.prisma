@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
+
+enum TributeStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+  GENERATING
+  COMPLETED
+}
+
+enum ContributionType {
+  TEXT
+  PHOTO
+  TEXT_AND_PHOTO
+}
+
+enum ContributionStatus {
+  PENDING
+  APPROVED
+  HIDDEN
+}
+
+// ─── NextAuth Models ──────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+
+  tributes Tribute[]
+  payments Payment[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── App Models ───────────────────────────────────────────────────────────────
+
+model Payment {
+  id                      String        @id @default(cuid())
+  userId                  String
+  stripePaymentIntentId   String        @unique
+  stripeCheckoutSessionId String?       @unique
+  amount                  Int
+  currency                String        @default("usd")
+  status                  PaymentStatus @default(PENDING)
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  user    User     @relation(fields: [userId], references: [id])
+  tribute Tribute?
+
+  @@map("payments")
+}
+
+model Tribute {
+  id        String        @id @default(cuid())
+  userId    String
+  paymentId String        @unique
+  slug      String        @unique
+  status    TributeStatus @default(DRAFT)
+
+  honoredName    String
+  honoredPhoto   String?
+  relationship   String
+  birthDate      DateTime?
+  passingDate    DateTime?
+  location       String?
+
+  tributeMessage String @db.Text
+
+  templateId         String?
+  cardGenerationData Json?
+
+  pdfUrl String?
+
+  allowAnonymous Boolean @default(true)
+  isPublic       Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  closedAt  DateTime?
+
+  user          User            @relation(fields: [userId], references: [id])
+  payment       Payment         @relation(fields: [paymentId], references: [id])
+  template      DesignTemplate? @relation(fields: [templateId], references: [id])
+  contributions Contribution[]
+  inviteTokens  InviteToken[]
+  emails        InviteEmail[]
+
+  @@map("tributes")
+}
+
+model DesignTemplate {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  previewUrl  String
+  isActive    Boolean @default(true)
+
+  colorScheme Json
+  fontFamily  String @default("serif")
+  borderStyle String @default("classic")
+  theme       String
+
+  tributes Tribute[]
+
+  @@map("design_templates")
+}
+
+model Contribution {
+  id        String             @id @default(cuid())
+  tributeId String
+  status    ContributionStatus @default(APPROVED)
+  type      ContributionType
+
+  contributorName  String?
+  contributorEmail String?
+  isAnonymous      Boolean @default(false)
+
+  message  String? @db.Text
+  photoUrl String?
+
+  isHidden Boolean @default(false)
+
+  cardPage Int?
+  cardCell Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tribute Tribute @relation(fields: [tributeId], references: [id], onDelete: Cascade)
+
+  @@map("contributions")
+}
+
+model InviteToken {
+  id        String    @id @default(cuid())
+  tributeId String
+  token     String    @unique @default(cuid())
+  email     String?
+  expiresAt DateTime?
+  usedAt    DateTime?
+  usedCount Int       @default(0)
+  maxUses   Int?
+
+  createdAt DateTime @default(now())
+
+  tribute Tribute @relation(fields: [tributeId], references: [id], onDelete: Cascade)
+
+  @@map("invite_tokens")
+}
+
+model InviteEmail {
+  id        String    @id @default(cuid())
+  tributeId String
+  toEmail   String
+  toName    String?
+  sentAt    DateTime  @default(now())
+  openedAt  DateTime?
+  resendId  String?
+
+  tribute Tribute @relation(fields: [tributeId], references: [id])
+
+  @@map("invite_emails")
+}
