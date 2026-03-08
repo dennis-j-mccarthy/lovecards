@@ -419,11 +419,18 @@ async function createPopulatedTributeWithData(userId: string) {
 }
 
 function setSessionCookie(response: NextResponse, sessionToken: string) {
-  response.cookies.set("authjs.session-token", sessionToken, {
+  const isSecure = process.env.NEXTAUTH_URL?.startsWith("https") ||
+    process.env.NEXT_PUBLIC_APP_URL?.startsWith("https")
+  const cookieName = isSecure
+    ? "__Secure-authjs.session-token"
+    : "authjs.session-token"
+
+  response.cookies.set(cookieName, sessionToken, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     maxAge: 86400,
+    secure: isSecure,
   })
 }
 
@@ -513,5 +520,6 @@ export async function DELETE() {
 
   const response = NextResponse.json({ cleared: true })
   response.cookies.delete("authjs.session-token")
+  response.cookies.delete("__Secure-authjs.session-token")
   return response
 }

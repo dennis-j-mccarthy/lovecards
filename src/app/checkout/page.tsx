@@ -96,7 +96,7 @@ export default function CheckoutPage() {
           Secure payment via Stripe. You&apos;ll create your tribute after checkout.
         </p>
 
-        {process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
+        {(process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEMO_MODE === "true") && (
           <button
             onClick={async () => {
               setLoading(true)
