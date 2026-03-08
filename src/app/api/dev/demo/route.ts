@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { generateSlug } from "@/lib/utils"
-import { isDemo } from "@/lib/demo"
 import crypto from "crypto"
 
 export const runtime = "nodejs"
@@ -429,10 +428,6 @@ function setSessionCookie(response: NextResponse, sessionToken: string) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!isDemo()) {
-    return NextResponse.json({ error: "Not available in production" }, { status: 403 })
-  }
-
   try {
   const body = await req.json().catch(() => ({}))
   const scenario = body.scenario || "buyer-with-tribute"
@@ -510,10 +505,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE() {
-  if (!isDemo()) {
-    return NextResponse.json({ error: "Not available in production" }, { status: 403 })
-  }
-
   const user = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } })
   if (user) {
     await cleanupDemoTributes(user.id)

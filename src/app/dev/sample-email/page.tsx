@@ -1,10 +1,4 @@
-import { redirect } from "next/navigation"
-import { isDemo } from "@/lib/demo"
-
 export default function SampleEmailPage() {
-  if (!isDemo()) {
-    redirect("/")
-  }
 
   const honoredName = "Sarah Mitchell"
   const purchaserName = "Demo User"

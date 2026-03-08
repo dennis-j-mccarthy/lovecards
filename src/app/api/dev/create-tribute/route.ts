@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { isDemo } from "@/lib/demo"
 
 export const runtime = "nodejs"
 
 // DEV ONLY — bypasses Stripe to create a tribute for testing
 export async function POST() {
-  if (!isDemo()) {
-    return NextResponse.json({ error: "Not available in production" }, { status: 403 })
-  }
-
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
