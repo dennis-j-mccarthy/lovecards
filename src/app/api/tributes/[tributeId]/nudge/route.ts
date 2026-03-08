@@ -46,7 +46,7 @@ export async function POST(
 
   // For each, find their invite token to reconstruct the URL
   const results = await Promise.allSettled(
-    inviteEmails.map(async (invite) => {
+    inviteEmails.map(async (invite: { toEmail: string; toName: string | null }) => {
       // Find the token created for this email
       const token = await prisma.inviteToken.findFirst({
         where: { tributeId: params.tributeId, email: invite.toEmail },
