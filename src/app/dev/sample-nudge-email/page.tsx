@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation"
+import { isDemo } from "@/lib/demo"
 
 export default function SampleNudgeEmailPage() {
-  if (process.env.NODE_ENV === "production") {
+  if (!isDemo()) {
     redirect("/")
   }
 

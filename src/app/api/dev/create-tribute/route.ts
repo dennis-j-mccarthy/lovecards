@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { isDemo } from "@/lib/demo"
 
 export const runtime = "nodejs"
 
 // DEV ONLY — bypasses Stripe to create a tribute for testing
 export async function POST() {
-  if (process.env.NODE_ENV === "production") {
+  if (!isDemo()) {
     return NextResponse.json({ error: "Not available in production" }, { status: 403 })
   }
 

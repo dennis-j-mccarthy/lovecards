@@ -38,7 +38,7 @@ export default function DemoPage() {
   const [error, setError] = useState<string | null>(null)
   const [contributeUrl, setContributeUrl] = useState<string | null>(null)
 
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_DEMO_MODE !== "true") {
     return (
       <div className="min-h-screen bg-[#faf9f7] grid place-items-center">
         <p className="text-sm text-[#999]">Not available in production.</p>

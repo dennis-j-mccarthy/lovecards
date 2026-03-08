@@ -20,7 +20,7 @@ export default function CheckoutPage() {
     setError(null)
 
     // In dev mode, go to mock checkout instead of real Stripe
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
       router.push("/dev/mock-checkout")
       return
     }
@@ -96,7 +96,7 @@ export default function CheckoutPage() {
           Secure payment via Stripe. You&apos;ll create your tribute after checkout.
         </p>
 
-        {process.env.NODE_ENV !== "production" && (
+        {process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
           <button
             onClick={async () => {
               setLoading(true)

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 import { CreateTestTributeButton } from "@/components/dev/create-test-tribute-button"
+import { isDemo } from "@/lib/demo"
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -66,7 +67,7 @@ export default async function DashboardPage() {
             >
               Create a Tribute — $99
             </Link>
-            {process.env.NODE_ENV !== "production" && (
+            {isDemo() && (
               <div className="mt-4">
                 <CreateTestTributeButton />
               </div>

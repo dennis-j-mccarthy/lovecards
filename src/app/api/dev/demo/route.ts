@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { generateSlug } from "@/lib/utils"
+import { isDemo } from "@/lib/demo"
 import crypto from "crypto"
 
 export const runtime = "nodejs"
@@ -428,7 +429,7 @@ function setSessionCookie(response: NextResponse, sessionToken: string) {
 }
 
 export async function POST(req: NextRequest) {
-  if (process.env.NODE_ENV === "production") {
+  if (!isDemo()) {
     return NextResponse.json({ error: "Not available in production" }, { status: 403 })
   }
 
@@ -509,7 +510,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE() {
-  if (process.env.NODE_ENV === "production") {
+  if (!isDemo()) {
     return NextResponse.json({ error: "Not available in production" }, { status: 403 })
   }
 
