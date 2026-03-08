@@ -60,7 +60,10 @@ export async function GET(
 const submitSchema = z.object({
   contributorName: z.string().min(1).max(100).optional(),
   contributorEmail: z.string().email().optional(),
+  contributorPhone: z.string().max(20).optional(),
+  smsOptIn: z.boolean().optional(),
   isAnonymous: z.boolean().default(false),
+  avatarUrl: z.string().url().optional(),
   message: z.string().min(1).max(1000).optional(),
   photoUrl: z.string().url().optional(),
 })
@@ -113,7 +116,10 @@ export async function POST(
       type,
       contributorName: data.isAnonymous ? null : (data.contributorName ?? null),
       contributorEmail: data.contributorEmail ?? null,
+      contributorPhone: data.contributorPhone ?? null,
+      smsOptIn: data.smsOptIn ?? false,
       isAnonymous: data.isAnonymous,
+      avatarUrl: data.isAnonymous ? null : (data.avatarUrl ?? null),
       message: data.message ?? null,
       photoUrl: data.photoUrl ?? null,
       status: "APPROVED",

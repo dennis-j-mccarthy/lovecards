@@ -19,6 +19,12 @@ export default function CheckoutPage() {
     setLoading(true)
     setError(null)
 
+    // In dev mode, go to mock checkout instead of real Stripe
+    if (process.env.NODE_ENV !== "production") {
+      router.push("/dev/mock-checkout")
+      return
+    }
+
     try {
       const res = await fetch("/api/checkout", { method: "POST" })
       const data = await res.json()
@@ -39,7 +45,7 @@ export default function CheckoutPage() {
             Love Cards
           </p>
           <h1 className="text-3xl font-normal text-[#1a1a1a] mb-4">
-            Memorial Tribute Box
+            Start a Card Box
           </h1>
           <p className="text-[#666] text-sm leading-relaxed">
             A beautifully printed collection of tribute cards from everyone who
@@ -53,7 +59,7 @@ export default function CheckoutPage() {
             {[
               "Unlimited contributors via email or shareable link",
               "Text messages, photos, or both per contribution",
-              "Claude AI generates beautiful 3×3 grid card layouts",
+              "Each contribution printed as a beautiful individual card",
               "Professionally printed on premium card stock",
               "Packaged in a branded keepsake box",
               "Optional anonymous contributions",
@@ -69,7 +75,7 @@ export default function CheckoutPage() {
         {/* Price */}
         <div className="flex items-baseline justify-between mb-6 px-1">
           <span className="text-sm text-[#666]">Memorial Tribute Box</span>
-          <span className="text-2xl font-normal text-[#1a1a1a]">$99</span>
+          <span className="text-2xl font-normal text-[#1a1a1a]">$49</span>
         </div>
 
         {error && (
@@ -89,6 +95,32 @@ export default function CheckoutPage() {
         <p className="text-xs text-[#999] text-center mt-4">
           Secure payment via Stripe. You&apos;ll create your tribute after checkout.
         </p>
+
+        {process.env.NODE_ENV !== "production" && (
+          <button
+            onClick={async () => {
+              setLoading(true)
+              setError(null)
+              try {
+                const res = await fetch("/api/dev/demo", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ scenario: "buyer-fresh" }),
+                })
+                const data = await res.json()
+                if (!res.ok) throw new Error(data.error ?? "Demo failed")
+                if (data.redirectUrl) window.location.href = data.redirectUrl
+              } catch (err) {
+                setError((err as Error).message)
+                setLoading(false)
+              }
+            }}
+            disabled={loading || status === "loading"}
+            className="w-full mt-3 border border-dashed border-[#8b7355] text-[#8b7355] py-3 text-xs tracking-[1px] uppercase hover:bg-[#f5f0e8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Skip Payment (Dev Only)
+          </button>
+        )}
       </div>
     </div>
   )

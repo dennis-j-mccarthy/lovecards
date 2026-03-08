@@ -63,10 +63,10 @@ export default function GeneratePage() {
   const isCompleted = tributeStatus?.status === "COMPLETED"
 
   const STEPS = [
-    { label: "Analyzing contributions", done: isGenerating || isCompleted },
-    { label: "Claude is designing your layout", done: isGenerating || isCompleted },
-    { label: "Rendering PDF", done: isCompleted },
-    { label: "Cards ready!", done: isCompleted },
+    { label: "Reviewing contributions", done: isGenerating || isCompleted },
+    { label: "Laying out your cards", done: isGenerating || isCompleted },
+    { label: "Sending to printer", done: isCompleted },
+    { label: "Order submitted!", done: isCompleted },
   ]
 
   return (
@@ -84,17 +84,19 @@ export default function GeneratePage() {
 
       <div className="max-w-2xl mx-auto px-6 py-20 text-center">
         <p className="text-xs tracking-[3px] uppercase text-[#8b7355] mb-4">
-          Card Generation
+          Final Review
         </p>
         <h1 className="text-3xl font-normal text-[#1a1a1a] mb-4">
-          {isCompleted ? "Your Cards Are Ready" : "Generate Your Cards"}
+          {isCompleted ? "Your Order Has Been Submitted" : "Send to Printer"}
         </h1>
 
         {!isGenerating && !isCompleted && (
           <>
             <p className="text-[#666] text-sm leading-relaxed mb-8 max-w-md mx-auto">
-              Claude will arrange all contributions into beautiful 3×3 grid layouts on
-              8.5×11 inch pages, then generate a print-ready PDF.
+              Once submitted, each contribution will be professionally printed on
+              premium card stock, placed in your keepsake box, and shipped directly
+              to you. Standard shipping is free — expect delivery within 4 business
+              days. Expedited shipping is available for an additional fee.
             </p>
 
             {error && (
@@ -103,17 +105,38 @@ export default function GeneratePage() {
               </div>
             )}
 
+            <div className="border border-[#e8e0d4] bg-white p-5 mb-8 max-w-md mx-auto text-left">
+              <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+                Please Note
+              </p>
+              <p className="text-xs text-[#666] leading-relaxed">
+                As the purchaser, you are entirely responsible for reviewing all
+                contributions for accuracy, including spelling, grammar, and content.
+                Under no circumstances will we be able to reprint cards once an order
+                has been submitted. Please review carefully before proceeding.
+              </p>
+            </div>
+
             <button
               onClick={handleGenerate}
               disabled={generating}
               className="bg-[#1a1a1a] text-white px-10 py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors disabled:opacity-50"
             >
-              {generating ? "Starting..." : "Generate Cards"}
+              {generating ? "Submitting..." : "Send to Printer"}
             </button>
 
             <p className="text-xs text-[#999] mt-4">
               This may take 1–3 minutes depending on the number of contributions.
             </p>
+
+            <div className="mt-6">
+              <Link
+                href={`/dashboard/${tributeId}`}
+                className="text-sm text-[#8b7355] hover:text-[#1a1a1a] transition-colors"
+              >
+                ← Go back and review contributions
+              </Link>
+            </div>
           </>
         )}
 
@@ -151,22 +174,82 @@ export default function GeneratePage() {
           </div>
         )}
 
-        {isCompleted && tributeStatus?.pdfUrl && (
-          <div className="mt-8 space-y-4">
-            <p className="text-[#666] text-sm">
-              Your tribute cards have been generated and are ready to download.
-            </p>
-            <a
-              href={tributeStatus.pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-[#1a1a1a] text-white px-10 py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors"
-            >
-              Download PDF
-            </a>
-            <p className="text-xs text-[#999]">
-              Share this PDF with your print shop or we can arrange printing for you.
-            </p>
+        {isCompleted && (
+          <div className="mt-8 max-w-lg mx-auto text-left">
+            <div className="text-center mb-10">
+              <p className="text-4xl mb-4">✦</p>
+              <h2 className="text-2xl font-normal text-[#1a1a1a] mb-2">
+                Thank You So Much for Your Order
+              </h2>
+              <p className="text-sm text-[#666] leading-relaxed">
+                We look forward to helping you share this keepsake with your loved one.
+              </p>
+            </div>
+
+            <div className="border border-[#d4c5a9] bg-white p-6 space-y-5 mb-8">
+              <div>
+                <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+                  What Happens Next
+                </p>
+                <ul className="space-y-3 text-sm text-[#2d2d2d]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#8b7355] mt-0.5">✦</span>
+                    <span>
+                      Each contribution is professionally printed on premium card stock,
+                      individually cut and finished with care.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#8b7355] mt-0.5">✦</span>
+                    <span>
+                      Your cards are placed in a beautiful branded keepsake box,
+                      ready to be opened and treasured.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#8b7355] mt-0.5">✦</span>
+                    <span>
+                      Standard shipping is included — expect delivery within
+                      <strong> 4 business days</strong>.
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="border-t border-[#e8e0d4] pt-4">
+                <p className="text-sm text-[#666]">
+                  Need it sooner?{" "}
+                  <a
+                    href="mailto:hello@lovecards.dev?subject=Expedited%20Shipping"
+                    className="text-[#8b7355] hover:underline"
+                  >
+                    Expedited shipping is available for an additional fee →
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            {tributeStatus?.pdfUrl && (
+              <div className="text-center mb-6">
+                <a
+                  href={tributeStatus.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block border border-[#d4c5a9] text-[#8b7355] px-8 py-3 text-sm tracking-[1px] uppercase hover:bg-[#f5f0e8] transition-colors"
+                >
+                  Download PDF Preview
+                </a>
+              </div>
+            )}
+
+            <div className="text-center">
+              <Link
+                href={`/dashboard/${tributeId}`}
+                className="inline-block bg-[#1a1a1a] text-white px-10 py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors"
+              >
+                Back to Dashboard
+              </Link>
+            </div>
           </div>
         )}
       </div>

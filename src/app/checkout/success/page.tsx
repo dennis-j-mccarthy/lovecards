@@ -18,7 +18,6 @@ function TributeCreationForm() {
     relationship: "",
     tributeMessage: "",
     birthDate: "",
-    passingDate: "",
     location: "",
   })
 
@@ -146,29 +145,16 @@ function TributeCreationForm() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
-                Birth Date
-              </label>
-              <input
-                type="date"
-                value={form.birthDate}
-                onChange={(e) => setForm((f) => ({ ...f, birthDate: e.target.value }))}
-                className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355]"
-              />
-            </div>
-            <div>
-              <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
-                Passing Date
-              </label>
-              <input
-                type="date"
-                value={form.passingDate}
-                onChange={(e) => setForm((f) => ({ ...f, passingDate: e.target.value }))}
-                className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355]"
-              />
-            </div>
+          <div>
+            <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+              Birth Date
+            </label>
+            <input
+              type="date"
+              value={form.birthDate}
+              onChange={(e) => setForm((f) => ({ ...f, birthDate: e.target.value }))}
+              className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355]"
+            />
           </div>
 
           <div>

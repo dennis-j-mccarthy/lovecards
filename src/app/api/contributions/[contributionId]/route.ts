@@ -6,7 +6,19 @@ import { z } from "zod"
 const updateSchema = z.object({
   isHidden: z.boolean().optional(),
   status: z.enum(["APPROVED", "HIDDEN"]).optional(),
+  message: z.string().max(1000).optional(),
 })
+
+async function getContributionWithOwnerCheck(contributionId: string, userId: string) {
+  const contribution = await prisma.contribution.findFirst({
+    where: { id: contributionId },
+    include: { tribute: true },
+  })
+
+  if (!contribution) return null
+  if (contribution.tribute.userId !== userId) return null
+  return contribution
+}
 
 export async function PATCH(
   req: NextRequest,
@@ -17,18 +29,9 @@ export async function PATCH(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  // Verify the contribution belongs to a tribute owned by this user
-  const contribution = await prisma.contribution.findFirst({
-    where: { id: params.contributionId },
-    include: { tribute: true },
-  })
-
+  const contribution = await getContributionWithOwnerCheck(params.contributionId, session.user.id)
   if (!contribution) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
-  }
-
-  if (contribution.tribute.userId !== session.user.id) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 
   const body = await req.json()
@@ -43,4 +46,23 @@ export async function PATCH(
   })
 
   return NextResponse.json(updated)
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { contributionId: string } }
+) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const contribution = await getContributionWithOwnerCheck(params.contributionId, session.user.id)
+  if (!contribution) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 })
+  }
+
+  await prisma.contribution.delete({ where: { id: params.contributionId } })
+
+  return NextResponse.json({ deleted: true })
 }

@@ -85,3 +85,29 @@ export async function PATCH(
 
   return NextResponse.json(updated)
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { tributeId: string } }
+) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const tribute = await getTributeForOwner(params.tributeId, session.user.id)
+  if (!tribute) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 })
+  }
+
+  // Cascade delete in order
+  await prisma.contribution.deleteMany({ where: { tributeId: tribute.id } })
+  await prisma.inviteEmail.deleteMany({ where: { tributeId: tribute.id } })
+  await prisma.inviteToken.deleteMany({ where: { tributeId: tribute.id } })
+  await prisma.tribute.delete({ where: { id: tribute.id } })
+  if (tribute.paymentId) {
+    await prisma.payment.delete({ where: { id: tribute.paymentId } }).catch(() => {})
+  }
+
+  return NextResponse.json({ deleted: true })
+}

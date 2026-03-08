@@ -26,6 +26,7 @@ export type PublicContribution = {
   type: Contribution["type"]
   isAnonymous: boolean
   contributorName: string | null
+  avatarUrl: string | null
   message: string | null
   photoUrl: string | null
   createdAt: Date
@@ -37,6 +38,7 @@ export function toPublicContribution(c: Contribution): PublicContribution {
     type: c.type,
     isAnonymous: c.isAnonymous,
     contributorName: c.isAnonymous ? null : c.contributorName,
+    avatarUrl: c.isAnonymous ? null : c.avatarUrl,
     message: c.isHidden ? null : c.message,
     photoUrl: c.isHidden ? null : c.photoUrl,
     createdAt: c.createdAt,

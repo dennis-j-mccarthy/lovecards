@@ -59,6 +59,7 @@ export default async function ContributePage({
     type: c.type,
     isAnonymous: c.isAnonymous,
     contributorName: c.isAnonymous ? null : c.contributorName,
+    avatarUrl: c.isAnonymous ? null : c.avatarUrl,
     message: c.message,
     photoUrl: c.photoUrl,
     createdAt: c.createdAt,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { SessionProvider } from "@/components/providers/session-provider"
+import { DevToolbar } from "@/components/dev/dev-toolbar"
 import {
   Playfair_Display,
   Lora,
@@ -49,8 +50,11 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`antialiased min-h-screen bg-[#faf9f7] text-[#2d2d2d] ${fontVars}`}>
-        <SessionProvider>{children}</SessionProvider>
+      <body className={`antialiased min-h-screen bg-[#faf9f7] text-[#2d2d2d] pb-28 ${fontVars}`}>
+        <SessionProvider>
+          {children}
+          {process.env.NODE_ENV !== "production" && <DevToolbar />}
+        </SessionProvider>
       </body>
     </html>
   )

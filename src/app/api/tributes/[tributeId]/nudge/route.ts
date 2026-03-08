@@ -1,19 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { sendInviteEmail } from "@/lib/resend"
+import { sendNudgeEmail } from "@/lib/resend"
 import { absoluteUrl } from "@/lib/utils"
 import { z } from "zod"
 
-const inviteSchema = z.object({
-  recipients: z.array(
-    z.object({
-      email: z.string().email(),
-      name: z.string().optional(),
-      cellPhone: z.string().min(1, "Cell phone is required").max(20),
-      phone: z.string().max(20).optional(),
-    })
-  ).min(1).max(50),
+const nudgeSchema = z.object({
+  emailIds: z.array(z.string()).min(1).max(50),
 })
 
 export async function POST(
@@ -27,6 +20,7 @@ export async function POST(
 
   const tribute = await prisma.tribute.findFirst({
     where: { id: params.tributeId, userId: session.user.id },
+    include: { contributions: { select: { id: true } } },
   })
 
   if (!tribute) {
@@ -34,51 +28,49 @@ export async function POST(
   }
 
   const body = await req.json()
-  const parsed = inviteSchema.safeParse(body)
+  const parsed = nudgeSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
   }
 
-  const { recipients } = parsed.data
+  const { emailIds } = parsed.data
   const purchaserName = session.user.name ?? "Someone special"
 
+  // Fetch the invite emails to nudge
+  const inviteEmails = await prisma.inviteEmail.findMany({
+    where: {
+      id: { in: emailIds },
+      tributeId: params.tributeId,
+    },
+  })
+
+  // For each, find their invite token to reconstruct the URL
   const results = await Promise.allSettled(
-    recipients.map(async ({ email, name, cellPhone, phone }) => {
-      // Create a unique token for this email
-      const tokenRecord = await prisma.inviteToken.create({
-        data: {
-          tributeId: params.tributeId,
-          email,
-          cellPhone,
-          phone: phone || null,
-          maxUses: 1,
-        },
+    inviteEmails.map(async (invite) => {
+      // Find the token created for this email
+      const token = await prisma.inviteToken.findFirst({
+        where: { tributeId: params.tributeId, email: invite.toEmail },
+        orderBy: { createdAt: "desc" },
       })
 
+      if (!token) {
+        throw new Error(`No token found for ${invite.toEmail}`)
+      }
+
       const tributeUrl = absoluteUrl(
-        `/tribute/${tribute.slug}/contribute?token=${tokenRecord.token}`
+        `/tribute/${tribute.slug}/contribute?token=${token.token}`
       )
 
-      const resendResult = await sendInviteEmail({
-        toEmail: email,
-        toName: name,
+      await sendNudgeEmail({
+        toEmail: invite.toEmail,
+        toName: invite.toName ?? undefined,
         honoredName: tribute.honoredName,
         purchaserName,
         tributeUrl,
+        contributionCount: tribute.contributions.length,
       })
 
-      await prisma.inviteEmail.create({
-        data: {
-          tributeId: params.tributeId,
-          toEmail: email,
-          toName: name,
-          toCellPhone: cellPhone,
-          toPhone: phone || null,
-          resendId: resendResult?.id,
-        },
-      })
-
-      return { email, success: true }
+      return { email: invite.toEmail, success: true }
     })
   )
 

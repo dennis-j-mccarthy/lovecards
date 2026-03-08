@@ -177,7 +177,10 @@ model Contribution {
 
   contributorName  String?
   contributorEmail String?
+  contributorPhone String?
+  smsOptIn         Boolean @default(false)
   isAnonymous      Boolean @default(false)
+  avatarUrl        String?
 
   message  String? @db.Text
   photoUrl String?
@@ -200,6 +203,8 @@ model InviteToken {
   tributeId String
   token     String    @unique @default(cuid())
   email     String?
+  cellPhone String?
+  phone     String?
   expiresAt DateTime?
   usedAt    DateTime?
   usedCount Int       @default(0)
@@ -216,8 +221,10 @@ model InviteEmail {
   id        String    @id @default(cuid())
   tributeId String
   toEmail   String
-  toName    String?
-  sentAt    DateTime  @default(now())
+  toName      String?
+  toCellPhone String?
+  toPhone     String?
+  sentAt      DateTime  @default(now())
   openedAt  DateTime?
   resendId  String?
 

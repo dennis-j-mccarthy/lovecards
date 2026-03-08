@@ -6,6 +6,8 @@ import { formatDate } from "@/lib/utils"
 import { toPublicContribution } from "@/types/tribute"
 import { DashboardLiveFeed } from "@/components/dashboard/dashboard-live-feed"
 import { CopyButton } from "@/components/dashboard/copy-button"
+import { TributeHeader } from "@/components/dashboard/tribute-header"
+import { DeleteTributeButton } from "@/components/dashboard/delete-tribute-button"
 import { absoluteUrl } from "@/lib/utils"
 
 export default async function TributeDashboardPage({
@@ -46,7 +48,7 @@ export default async function TributeDashboardPage({
       <nav className="border-b border-[#d4c5a9] px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center gap-6">
           <Link href="/dashboard" className="text-xs tracking-[3px] uppercase text-[#8b7355]">
-            ← My Tributes
+            &larr; My Tributes
           </Link>
           <div className="flex-1" />
           <Link
@@ -83,20 +85,16 @@ export default async function TributeDashboardPage({
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-1">
-            {tribute.relationship}
-          </p>
-          <h1 className="text-4xl font-normal text-[#1a1a1a]">{tribute.honoredName}</h1>
-          {(tribute.birthDate || tribute.passingDate) && (
-            <p className="text-sm text-[#999] mt-2">
-              {tribute.birthDate ? formatDate(tribute.birthDate) : ""}
-              {tribute.birthDate && tribute.passingDate ? " — " : ""}
-              {tribute.passingDate ? formatDate(tribute.passingDate) : ""}
-            </p>
-          )}
-        </div>
+        {/* Header with edit/delete */}
+        <TributeHeader
+          tributeId={tribute.id}
+          honoredName={tribute.honoredName}
+          relationship={tribute.relationship}
+          tributeMessage={tribute.tributeMessage}
+          birthDate={tribute.birthDate?.toISOString() ?? null}
+          passingDate={tribute.passingDate?.toISOString() ?? null}
+          location={tribute.location}
+        />
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-8">
@@ -141,8 +139,22 @@ export default async function TributeDashboardPage({
           tributeId={tribute.id}
           initialContributions={publicContributions}
         />
+
+        {/* Invite more */}
+        <div className="mt-8 text-center">
+          <Link
+            href={`/dashboard/${tribute.id}/invite`}
+            className="inline-flex items-center gap-2 border border-[#d4c5a9] text-[#8b7355] px-6 py-3 text-sm tracking-[1px] uppercase hover:bg-[#f5f0e8] transition-colors"
+          >
+            + Invite More People
+          </Link>
+        </div>
+
+        {/* Danger zone */}
+        <div className="mt-12 pt-8 border-t border-[#e8e0d4]">
+          <DeleteTributeButton tributeId={tribute.id} />
+        </div>
       </div>
     </div>
   )
 }
-
