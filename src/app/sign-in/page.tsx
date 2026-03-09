@@ -18,7 +18,7 @@ export default async function SignInPage({
     <div className="min-h-screen bg-[#faf9f7] grid place-items-center px-6 py-16">
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
-          <p className="text-xs tracking-[3px] uppercase text-[#8b7355] mb-2">Love Cards</p>
+          <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-4" />
           <h1 className="text-2xl font-normal text-[#1a1a1a]">Sign In</h1>
           <p className="text-sm text-[#666] mt-2">
             To create and manage your tribute pages

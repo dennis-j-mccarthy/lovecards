@@ -49,6 +49,11 @@ export function ContributionSubmitPage({
       {/* Header */}
       <div className="border-b border-[#d4c5a9] px-6 py-8">
         <div className="max-w-4xl mx-auto">
+          <div className="flex justify-center mb-6">
+            <Link href="/">
+              <img src="/logo.png" alt="Love Cards" className="h-[200px]" />
+            </Link>
+          </div>
           <p className="text-xs tracking-[4px] uppercase text-[#8b7355] mb-1">
             Write a Card for
           </p>

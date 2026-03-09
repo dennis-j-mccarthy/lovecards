@@ -32,6 +32,9 @@ export default async function TributePage({
       {/* Header */}
       <div className="border-b border-[#d4c5a9] py-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
+          <Link href="/">
+            <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-8" />
+          </Link>
           {tribute.honoredPhoto && (
             <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-[#d4c5a9]">
               <Image
@@ -97,8 +100,8 @@ export default async function TributePage({
       </div>
 
       <footer className="border-t border-[#d4c5a9] py-8 px-6 text-center mt-8">
-        <Link href="/" className="text-xs text-[#999] hover:text-[#8b7355] transition-colors">
-          Love Cards
+        <Link href="/">
+          <img src="/logo.png" alt="Love Cards" className="h-24 mx-auto opacity-60 hover:opacity-100 transition-opacity" />
         </Link>
       </footer>
     </div>

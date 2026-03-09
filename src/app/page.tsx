@@ -10,23 +10,25 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-[#faf9f7]">
       {/* Nav */}
-      <nav className="border-b border-[#d4c5a9] px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div>
-            <p className="text-xs tracking-[3px] uppercase text-[#8b7355]">Love Cards</p>
+      <nav className="border-b border-[#d4c5a9] px-6 pt-8 pb-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex justify-center">
+            <Link href="/">
+              <img src="/logo.png" alt="Love Cards" className="h-[200px]" />
+            </Link>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex justify-center gap-8 mt-4">
             {session ? (
               <Link
                 href="/dashboard"
-                className="text-sm text-[#2d2d2d] hover:text-[#8b7355] transition-colors"
+                className="text-sm tracking-[1px] uppercase text-[#8b7355] hover:text-[#1a1a1a] transition-colors"
               >
                 My Tributes
               </Link>
             ) : (
               <Link
                 href="/sign-in"
-                className="text-sm text-[#2d2d2d] hover:text-[#8b7355] transition-colors"
+                className="text-sm tracking-[1px] uppercase text-[#8b7355] hover:text-[#1a1a1a] transition-colors"
               >
                 Sign In
               </Link>

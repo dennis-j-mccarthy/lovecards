@@ -37,16 +37,19 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#faf9f7]">
       <nav className="border-b border-[#d4c5a9] px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xs tracking-[3px] uppercase text-[#8b7355]">
-            Love Cards
+        <div className="max-w-5xl mx-auto grid grid-cols-3 items-center">
+          <div />
+          <Link href="/" className="flex justify-center">
+            <img src="/logo.png" alt="Love Cards" className="h-[200px]" />
           </Link>
-          <Link
-            href="/checkout"
-            className="text-sm border border-[#1a1a1a] px-4 py-2 text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-colors"
-          >
-            New Tribute
-          </Link>
+          <div className="flex justify-end">
+            <Link
+              href="/checkout"
+              className="text-sm border border-[#1a1a1a] px-4 py-2 text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-colors"
+            >
+              New Tribute
+            </Link>
+          </div>
         </div>
       </nav>
 

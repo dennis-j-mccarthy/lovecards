@@ -93,6 +93,7 @@ export default function DemoPage() {
     <div className="min-h-screen bg-[#faf9f7] px-6 py-16">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
+          <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-4" />
           <p className="text-xs tracking-[3px] uppercase text-[#8b7355] mb-2">
             Dev Only
           </p>

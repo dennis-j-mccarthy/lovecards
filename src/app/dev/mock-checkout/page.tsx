@@ -33,7 +33,7 @@ export default function MockCheckoutPage() {
       <div className="w-full max-w-md">
         {/* Stripe-like header */}
         <div className="bg-[#1a1a1a] text-white p-6 rounded-t-lg">
-          <p className="text-xs uppercase tracking-[2px] text-[#999] mb-1">Love Cards</p>
+          <img src="/logo.png" alt="Love Cards" className="h-12 mb-1" />
           <p className="text-2xl font-light">$49.00</p>
           <p className="text-sm text-[#999] mt-1">Memorial Tribute Box</p>
         </div>

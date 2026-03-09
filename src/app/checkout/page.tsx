@@ -41,9 +41,7 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <p className="text-xs tracking-[3px] uppercase text-[#8b7355] mb-2">
-            Love Cards
-          </p>
+          <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-4" />
           <h1 className="text-3xl font-normal text-[#1a1a1a] mb-4">
             Start a Card Box
           </h1>
