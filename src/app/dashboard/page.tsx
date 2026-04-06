@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { getDbUser } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import Link from "next/link"
@@ -7,11 +7,11 @@ import { CreateTestTributeButton } from "@/components/dev/create-test-tribute-bu
 import { isDemo } from "@/lib/demo"
 
 export default async function DashboardPage() {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/sign-in")
+  const user = await getDbUser()
+  if (!user) redirect("/sign-in")
 
   const tributes = await prisma.tribute.findMany({
-    where: { userId: session.user.id },
+    where: { userId: user.id },
     include: {
       _count: { select: { contributions: { where: { isHidden: false } } } },
     },
@@ -27,48 +27,40 @@ export default async function DashboardPage() {
   }
 
   const STATUS_COLORS: Record<string, string> = {
-    DRAFT: "text-[#999] border-[#ddd]",
+    DRAFT: "text-gray-400 border-gray-200",
     ACTIVE: "text-green-700 border-green-200",
-    CLOSED: "text-[#888] border-[#ddd]",
+    CLOSED: "text-gray-400 border-gray-200",
     GENERATING: "text-blue-700 border-blue-200",
-    COMPLETED: "text-[#8b7355] border-[#d4c5a9]",
+    COMPLETED: "text-[#800020] border-[#e5e7eb]",
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
-      <nav className="border-b border-[#d4c5a9] px-6 py-4">
-        <div className="max-w-5xl mx-auto grid grid-cols-3 items-center">
-          <div />
-          <Link href="/" className="flex justify-center">
-            <img src="/logo.png" alt="Love Cards" className="h-[200px]" />
-          </Link>
-          <div className="flex justify-end">
-            <Link
-              href="/checkout"
-              className="text-sm border border-[#1a1a1a] px-4 py-2 text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-colors"
-            >
-              New Tribute
-            </Link>
-          </div>
-        </div>
-      </nav>
-
+    <div className="min-h-screen bg-white">
       <div className="max-w-5xl mx-auto px-6 py-12">
-        <h1 className="text-2xl font-normal text-[#1a1a1a] mb-8">My Tributes</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-normal text-[#111827]">My Love Card Boxes</h1>
+          <Link
+            href="/checkout"
+            className="text-sm font-medium text-white px-5 py-2.5 rounded-lg transition-all hover:brightness-110"
+            style={{ background: 'linear-gradient(135deg, #800020 0%, #5c0018 100%)' }}
+          >
+            + New Love Card Box
+          </Link>
+        </div>
 
         {tributes.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-[#d4c5a9]">
-            <p className="text-[#8b7355] text-xs tracking-[2px] uppercase mb-3">
-              No tributes yet
+          <div className="text-center py-20 border border-dashed border-[#e5e7eb]">
+            <p className="text-[#800020] text-xs tracking-[2px] uppercase mb-3">
+              No Love Card Boxes yet
             </p>
-            <p className="text-[#666] text-sm mb-6">
-              Create your first memorial tribute card collection
+            <p className="text-gray-500 text-sm mb-6">
+              Create your first Love Card Box
             </p>
             <Link
               href="/checkout"
-              className="inline-block bg-[#1a1a1a] text-white px-8 py-3 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors"
+              className="inline-block bg-gray-900 text-white px-8 py-3 text-sm font-medium tracking-wide uppercase rounded-lg hover:bg-[#333] transition-colors"
             >
-              Create a Tribute — $99
+              Create a Love Card Box — $49
             </Link>
             {isDemo() && (
               <div className="mt-4">
@@ -81,18 +73,18 @@ export default async function DashboardPage() {
             {tributes.map((tribute) => (
               <Link
                 key={tribute.id}
-                href={`/dashboard/${tribute.id}`}
-                className="block border border-[#d4c5a9] bg-white p-6 hover:border-[#8b7355] transition-colors"
+                href={`/dashboard/${tribute.id}/invite`}
+                className="block border border-[#e5e7eb] bg-white p-6 hover:border-[#800020] transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-1">
+                    <p className="text-xs tracking-[2px] uppercase text-[#800020] mb-1">
                       {tribute.relationship}
                     </p>
-                    <h2 className="text-xl font-normal text-[#1a1a1a]">
+                    <h2 className="text-xl font-normal text-[#111827]">
                       {tribute.honoredName}
                     </h2>
-                    <p className="text-sm text-[#999] mt-1">
+                    <p className="text-sm text-gray-400 mt-1">
                       {tribute._count.contributions} contribution
                       {tribute._count.contributions !== 1 ? "s" : ""}
                     </p>
@@ -105,7 +97,7 @@ export default async function DashboardPage() {
                     >
                       {STATUS_LABELS[tribute.status] ?? tribute.status}
                     </span>
-                    <p className="text-xs text-[#bbb] mt-2">
+                    <p className="text-xs text-gray-300 mt-2">
                       Created {formatDate(tribute.createdAt)}
                     </p>
                   </div>

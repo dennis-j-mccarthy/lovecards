@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUser } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { sendNudgeEmail } from "@/lib/resend"
 import { absoluteUrl } from "@/lib/utils"
@@ -13,13 +13,13 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { tributeId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const user = await getDbUser()
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const tribute = await prisma.tribute.findFirst({
-    where: { id: params.tributeId, userId: session.user.id },
+    where: { id: params.tributeId, userId: user.id },
     include: { contributions: { select: { id: true } } },
   })
 
@@ -34,7 +34,7 @@ export async function POST(
   }
 
   const { emailIds } = parsed.data
-  const purchaserName = session.user.name ?? "Someone special"
+  const purchaserName = user.name ?? "Someone special"
 
   // Fetch the invite emails to nudge
   const inviteEmails = await prisma.inviteEmail.findMany({
@@ -74,8 +74,8 @@ export async function POST(
     })
   )
 
-  const sent = results.filter((r) => r.status === "fulfilled").length
-  const failed = results.filter((r) => r.status === "rejected").length
+  const sent = results.filter((r: PromiseSettledResult<{ email: string; success: boolean }>) => r.status === "fulfilled").length
+  const failed = results.filter((r: PromiseSettledResult<{ email: string; success: boolean }>) => r.status === "rejected").length
 
   return NextResponse.json({ sent, failed })
 }

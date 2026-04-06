@@ -1,23 +1,14 @@
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
 
-export async function middleware(req: NextRequest) {
+const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"])
+
+export default clerkMiddleware((auth, req) => {
   const { pathname, searchParams } = req.nextUrl
 
-  // Protect dashboard routes — check for NextAuth session cookie
-  if (pathname.startsWith("/dashboard")) {
-    // NextAuth v5 session token cookie names
-    const sessionToken =
-      req.cookies.get("authjs.session-token")?.value ??
-      req.cookies.get("__Secure-authjs.session-token")?.value ??
-      req.cookies.get("next-auth.session-token")?.value ??
-      req.cookies.get("__Secure-next-auth.session-token")?.value
-
-    if (!sessionToken) {
-      const signInUrl = new URL("/sign-in", req.url)
-      signInUrl.searchParams.set("callbackUrl", pathname)
-      return NextResponse.redirect(signInUrl)
-    }
+  // Protect dashboard routes
+  if (isProtectedRoute(req)) {
+    auth().protect()
   }
 
   // Contributor routes — validate invite token from query param or cookie
@@ -45,8 +36,13 @@ export async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next()
-}
+})
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/tribute/:slug/contribute/:path*"],
+  matcher: [
+    // Skip Next.js internals and all static files
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 }

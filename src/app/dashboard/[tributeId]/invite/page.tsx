@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { redirect, notFound } from "next/navigation"
 import { absoluteUrl } from "@/lib/utils"
@@ -9,11 +9,11 @@ export default async function InvitePage({
 }: {
   params: { tributeId: string }
 }) {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/sign-in")
+  const userId = await getDbUserId()
+  if (!userId) redirect("/sign-in")
 
   const tribute = await prisma.tribute.findFirst({
-    where: { id: params.tributeId, userId: session.user.id },
+    where: { id: params.tributeId, userId },
     include: {
       inviteTokens: {
         orderBy: { createdAt: "asc" },
@@ -31,11 +31,13 @@ export default async function InvitePage({
     ? absoluteUrl(`/tribute/${tribute.slug}/contribute?token=${shareToken.token}`)
     : null
 
-  // Find which invited emails have NOT contributed
-  // An invite token with email + usedCount === 0 means they haven't contributed
+  // Split invited people into pending vs contributed
   const emailTokens = tribute.inviteTokens.filter((t) => t.email !== null)
   const unusedEmails = new Set(
     emailTokens.filter((t) => t.usedCount === 0).map((t) => t.email!)
+  )
+  const usedEmails = new Set(
+    emailTokens.filter((t) => t.usedCount > 0).map((t) => t.email!)
   )
 
   const pendingInvitees = tribute.emails
@@ -47,6 +49,19 @@ export default async function InvitePage({
       cellPhone: e.toCellPhone,
       phone: e.toPhone,
       sentAt: e.sentAt.toISOString(),
+      contributed: false as const,
+    }))
+
+  const completedInvitees = tribute.emails
+    .filter((e) => usedEmails.has(e.toEmail))
+    .map((e) => ({
+      id: e.id,
+      email: e.toEmail,
+      name: e.toName,
+      cellPhone: e.toCellPhone,
+      phone: e.toPhone,
+      sentAt: e.sentAt.toISOString(),
+      contributed: true as const,
     }))
 
   return (
@@ -54,6 +69,7 @@ export default async function InvitePage({
       tributeId={tribute.id}
       shareUrl={shareUrl}
       pendingInvitees={pendingInvitees}
+      completedInvitees={completedInvitees}
     />
   )
 }

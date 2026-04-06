@@ -7,9 +7,9 @@ const SAMPLE_CARDS = [
   {
     text: "You believed in me before I could find it in myself.",
     name: "Noah G.",
-    bg: "#faf9f7", color: "#2d2d2d", font: "var(--font-playfair), serif",
-    border: "2px solid #c9a96e",        // gold outer rule
-    accent: "#c9a96e", borderStyle: "double-inset",
+    bg: "#ffffff", color: "#1f2937", font: "var(--font-playfair), serif",
+    border: "2px solid #818cf8",        // gold outer rule
+    accent: "#818cf8", borderStyle: "double-inset",
   },
   {
     text: "Your laugh has a way of making any room feel like home.",
@@ -21,9 +21,9 @@ const SAMPLE_CARDS = [
   {
     text: "You hold this family together in ways most of us will never fully see. I see it.",
     name: "Finn B.",
-    bg: "#f9f6f0", color: "#2d2d2d", font: "var(--font-garamond), serif",
-    border: "1px solid #2d2d2d",        // crisp dark rule
-    accent: "#2d2d2d", borderStyle: "double-rule",
+    bg: "#f9f6f0", color: "#1f2937", font: "var(--font-garamond), serif",
+    border: "1px solid #1f2937",        // crisp dark rule
+    accent: "#1f2937", borderStyle: "double-rule",
   },
   {
     text: "Tell me, what is it you plan to do with your one wild and precious life?",
@@ -35,14 +35,14 @@ const SAMPLE_CARDS = [
   {
     text: "You are the reason I believe I can do anything.",
     name: "Ben C.",
-    bg: "#fffdf9", color: "#1a1a1a", font: "var(--font-dancing), cursive",
-    border: "1px solid #c9a96e",
-    accent: "#c9a96e", borderStyle: "corner-marks",
+    bg: "#fffdf9", color: "#111827", font: "var(--font-dancing), cursive",
+    border: "1px solid #818cf8",
+    accent: "#818cf8", borderStyle: "corner-marks",
   },
   {
     text: "Every birthday cake from scratch — that's love in flour and butter.",
     name: "Nora H.",
-    bg: "#faf9f7", color: "#2d2d2d", font: "var(--font-merriweather), serif",
+    bg: "#ffffff", color: "#1f2937", font: "var(--font-merriweather), serif",
     border: "1px solid #aaa",           // neutral silver rule
     accent: "#aaa", borderStyle: "double-rule",
   },
@@ -250,21 +250,21 @@ export function ProductMockup() {
               }} />
               {/* Foil stamp */}
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                <div style={{ width: 40, height: 1, background: "linear-gradient(90deg, transparent, #c9a96e, transparent)" }} />
+                <div style={{ width: 40, height: 1, background: "linear-gradient(90deg, transparent, #818cf8, transparent)" }} />
                 <p style={{
                   fontSize: 10,
                   letterSpacing: "0.35em",
                   textTransform: "uppercase",
-                  color: "#c9a96e",
+                  color: "#818cf8",
                   fontFamily: "var(--font-josefin), sans-serif",
                   opacity: 0.9,
                 }}>You Are So Loved</p>
-                <div style={{ width: 60, height: 1, background: "linear-gradient(90deg, transparent, #c9a96e, transparent)" }} />
+                <div style={{ width: 60, height: 1, background: "linear-gradient(90deg, transparent, #818cf8, transparent)" }} />
                 <p style={{
                   fontSize: 7,
                   letterSpacing: "0.2em",
                   textTransform: "uppercase",
-                  color: "#c9a96e",
+                  color: "#818cf8",
                   fontFamily: "var(--font-josefin), sans-serif",
                   opacity: 0.5,
                   marginTop: 4,

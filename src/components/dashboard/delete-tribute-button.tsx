@@ -32,9 +32,9 @@ export function DeleteTributeButton({ tributeId }: DeleteTributeButtonProps) {
     return (
       <button
         onClick={() => setConfirming(true)}
-        className="text-sm text-[#ccc] hover:text-red-400 transition-colors"
+        className="text-sm text-gray-300 hover:text-red-400 transition-colors"
       >
-        Delete this tribute
+        Delete this Love Card Box
       </button>
     )
   }
@@ -42,7 +42,7 @@ export function DeleteTributeButton({ tributeId }: DeleteTributeButtonProps) {
   return (
     <div className="flex items-center gap-3 border border-red-200 bg-red-50 px-4 py-3">
       <p className="text-sm text-red-600 flex-1">
-        This will permanently delete the tribute and all contributions. This cannot be undone.
+        This will permanently delete this Love Card Box and all contributions. This cannot be undone.
       </p>
       <button
         onClick={handleDelete}
@@ -53,7 +53,7 @@ export function DeleteTributeButton({ tributeId }: DeleteTributeButtonProps) {
       </button>
       <button
         onClick={() => setConfirming(false)}
-        className="text-sm text-[#999] hover:text-[#666] transition-colors flex-shrink-0"
+        className="text-sm text-gray-400 hover:text-gray-500 transition-colors flex-shrink-0"
       >
         Cancel
       </button>

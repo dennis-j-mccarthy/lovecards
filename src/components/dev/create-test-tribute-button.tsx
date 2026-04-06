@@ -24,9 +24,9 @@ export function CreateTestTributeButton() {
     <button
       onClick={handleClick}
       disabled={loading}
-      className="inline-block border border-dashed border-[#8b7355] text-[#8b7355] px-6 py-2 text-xs tracking-[1px] uppercase hover:bg-[#f5f0e8] transition-colors disabled:opacity-50"
+      className="inline-block border border-dashed border-[#800020] text-[#800020] px-6 py-2 text-xs tracking-[1px] uppercase hover:bg-[#fdf2f4] transition-colors disabled:opacity-50"
     >
-      {loading ? "Creating..." : "⚡ Create Test Tribute (Dev Only)"}
+      {loading ? "Creating..." : "⚡ Create Test Love Card Box (Dev Only)"}
     </button>
   )
 }

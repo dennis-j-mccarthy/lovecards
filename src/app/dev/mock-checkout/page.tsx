@@ -32,24 +32,24 @@ export default function MockCheckoutPage() {
     <div className="min-h-screen bg-[#f6f9fc] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Stripe-like header */}
-        <div className="bg-[#1a1a1a] text-white p-6 rounded-t-lg">
+        <div className="bg-[#111827] text-white p-6 rounded-t-lg">
           <img src="/logo.png" alt="Love Cards" className="h-12 mb-1" />
           <p className="text-2xl font-light">$49.00</p>
-          <p className="text-sm text-[#999] mt-1">Memorial Tribute Box</p>
+          <p className="text-sm text-gray-400 mt-1">Love Card Box</p>
         </div>
 
         {/* Card form */}
         <div className="bg-white border border-[#e0e0e0] border-t-0 p-6 rounded-b-lg shadow-lg">
           <div className="space-y-4 mb-6">
             <div>
-              <label className="block text-sm text-[#666] mb-1.5">Email</label>
+              <label className="block text-sm text-gray-500 mb-1.5">Email</label>
               <div className="border border-[#d0d0d0] rounded px-3 py-2.5 bg-[#fafafa] text-sm text-[#333]">
                 demo@lovecards.dev
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-[#666] mb-1.5">Card information</label>
+              <label className="block text-sm text-gray-500 mb-1.5">Card information</label>
               <div className="border border-[#d0d0d0] rounded overflow-hidden">
                 <div className="flex items-center px-3 py-2.5 bg-[#fafafa]">
                   <span className="text-sm text-[#333] flex-1">4242 4242 4242 4242</span>
@@ -70,14 +70,14 @@ export default function MockCheckoutPage() {
             </div>
 
             <div>
-              <label className="block text-sm text-[#666] mb-1.5">Cardholder name</label>
+              <label className="block text-sm text-gray-500 mb-1.5">Cardholder name</label>
               <div className="border border-[#d0d0d0] rounded px-3 py-2.5 bg-[#fafafa] text-sm text-[#333]">
                 Demo User
               </div>
             </div>
 
             <div>
-              <label className="block text-sm text-[#666] mb-1.5">Country or region</label>
+              <label className="block text-sm text-gray-500 mb-1.5">Country or region</label>
               <div className="border border-[#d0d0d0] rounded px-3 py-2.5 bg-[#fafafa] text-sm text-[#333]">
                 United States
               </div>
@@ -107,7 +107,7 @@ export default function MockCheckoutPage() {
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0110 0v4" />
             </svg>
-            <p className="text-xs text-[#999]">
+            <p className="text-xs text-gray-400">
               Demo mode — no real charge
             </p>
           </div>

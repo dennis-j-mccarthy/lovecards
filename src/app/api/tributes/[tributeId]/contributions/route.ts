@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { toPublicContribution } from "@/types/tribute"
 import { z } from "zod"
@@ -27,17 +27,17 @@ export async function GET(
   { params }: { params: { tributeId: string } }
 ) {
   // Allow both owners and token holders to list contributions
-  const session = await auth()
+  const userId = await getDbUserId()
   const token = await getValidatedToken(req, params.tributeId)
 
-  if (!session?.user?.id && !token) {
+  if (!userId && !token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const isOwner =
-    session?.user?.id &&
+    userId &&
     (await prisma.tribute.findFirst({
-      where: { id: params.tributeId, userId: session.user.id },
+      where: { id: params.tributeId, userId },
     }))
 
   const contributions = await prisma.contribution.findMany({
@@ -63,9 +63,10 @@ const submitSchema = z.object({
   contributorPhone: z.string().max(20).optional(),
   smsOptIn: z.boolean().optional(),
   isAnonymous: z.boolean().default(false),
-  avatarUrl: z.string().url().optional(),
+  avatarUrl: z.string().optional(),
   message: z.string().min(1).max(1000).optional(),
-  photoUrl: z.string().url().optional(),
+  citationSource: z.string().max(200).optional(),
+  photoUrl: z.string().optional(),
 })
 
 export async function POST(
@@ -73,9 +74,9 @@ export async function POST(
   { params }: { params: { tributeId: string } }
 ) {
   const token = await getValidatedToken(req, params.tributeId)
-  const session = await auth()
+  const userId = await getDbUserId()
 
-  if (!token && !session?.user?.id) {
+  if (!token && !userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
@@ -84,11 +85,11 @@ export async function POST(
   })
 
   if (!tribute) {
-    return NextResponse.json({ error: "Tribute not found" }, { status: 404 })
+    return NextResponse.json({ error: "Love Card Box not found" }, { status: 404 })
   }
 
   if (tribute.status === "CLOSED" || tribute.status === "COMPLETED") {
-    return NextResponse.json({ error: "This tribute is no longer accepting contributions" }, { status: 403 })
+    return NextResponse.json({ error: "This Love Card Box is no longer accepting contributions" }, { status: 403 })
   }
 
   const body = await req.json()
@@ -121,6 +122,7 @@ export async function POST(
       isAnonymous: data.isAnonymous,
       avatarUrl: data.isAnonymous ? null : (data.avatarUrl ?? null),
       message: data.message ?? null,
+      citationSource: data.citationSource ?? null,
       photoUrl: data.photoUrl ?? null,
       status: "APPROVED",
     },

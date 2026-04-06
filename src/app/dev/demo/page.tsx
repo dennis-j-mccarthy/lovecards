@@ -7,14 +7,14 @@ const SCENARIOS = [
     id: "buyer-fresh",
     title: "Fresh Buyer",
     description:
-      "Start from the tribute creation form (post-payment). Fill in who you're honoring, then land on the dashboard.",
+      "Start from the Love Card Box creation form (post-payment). Fill in who you're honoring, then land on the dashboard.",
     color: "#e8785e",
   },
   {
     id: "buyer-with-tribute",
-    title: "Buyer with Tribute",
+    title: "Buyer with Love Card Box",
     description:
-      "Jump straight to the dashboard with a pre-created tribute. Explore invite, design, and generate pages.",
+      "Jump straight to the dashboard with a pre-created Love Card Box. Explore invite, design, and generate pages.",
     color: "#e6a644",
   },
   {
@@ -28,7 +28,7 @@ const SCENARIOS = [
     id: "post-purchase",
     title: "Post-Purchase (with contributions)",
     description:
-      "Dashboard with a tribute that already has 6 contributions. Test the live feed, review, and card generation.",
+      "Dashboard with a Love Card Box that already has 6 contributions. Test the live feed, review, and card generation.",
     color: "#6b8fd4",
   },
 ]
@@ -90,17 +90,17 @@ export default function DemoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] px-6 py-16">
+    <div className="min-h-screen bg-white px-6 py-16">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
           <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-4" />
-          <p className="text-xs tracking-[3px] uppercase text-[#8b7355] mb-2">
+          <p className="text-xs tracking-[3px] uppercase text-[#800020] mb-2">
             Dev Only
           </p>
-          <h1 className="text-3xl font-normal text-[#1a1a1a] mb-2">
+          <h1 className="text-3xl font-normal text-[#111827] mb-2">
             Demo Mode
           </h1>
-          <p className="text-sm text-[#666]">
+          <p className="text-sm text-gray-500">
             Simulate the full Love Cards experience with fake auth and payments.
           </p>
         </div>
@@ -121,7 +121,7 @@ export default function DemoPage() {
               style={{
                 borderColor: s.color,
                 borderLeftWidth: 4,
-                background: loading === s.id ? "#f5f0e8" : "white",
+                background: loading === s.id ? "#fdf2f4" : "white",
               }}
             >
               <div className="flex items-center gap-3 mb-1">
@@ -129,10 +129,10 @@ export default function DemoPage() {
                   {s.title}
                 </h3>
                 {loading === s.id && (
-                  <span className="text-xs text-[#999]">Setting up...</span>
+                  <span className="text-xs text-gray-400">Setting up...</span>
                 )}
               </div>
-              <p className="text-sm text-[#666] leading-relaxed">{s.description}</p>
+              <p className="text-sm text-gray-500 leading-relaxed">{s.description}</p>
             </button>
           ))}
         </div>
@@ -155,7 +155,7 @@ export default function DemoPage() {
           <button
             onClick={clearDemo}
             disabled={loading !== null}
-            className="text-xs tracking-[1px] uppercase text-[#999] hover:text-[#666] transition-colors disabled:opacity-50"
+            className="text-xs tracking-[1px] uppercase text-gray-400 hover:text-gray-500 transition-colors disabled:opacity-50"
           >
             {loading === "clear" ? "Clearing..." : "Clear Demo Data"}
           </button>

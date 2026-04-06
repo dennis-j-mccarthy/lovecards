@@ -69,11 +69,11 @@ function FeedItemBubble({ item }: { item: FeedItem }) {
   const emoji = contribution.isAnonymous ? "🖤" : "💌"
 
   return (
-    <div className="feed-item-animate bg-white border border-[#d4c5a9] shadow-md px-4 py-3 flex items-center gap-3">
+    <div className="feed-item-animate bg-white border border-[#e5e7eb] shadow-md px-4 py-3 flex items-center gap-3">
       <span className="text-lg flex-shrink-0">{emoji}</span>
-      <p className="text-sm text-[#2d2d2d]">
+      <p className="text-sm text-[#1f2937]">
         <span className="font-medium">{name}</span>{" "}
-        <span className="text-[#666]">{typeLabel}</span>
+        <span className="text-gray-500">{typeLabel}</span>
       </p>
     </div>
   )

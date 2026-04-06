@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { toPublicContribution } from "@/types/tribute"
 
@@ -10,14 +10,14 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { tributeId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return new Response("Unauthorized", { status: 401 })
   }
 
   // Verify ownership
   const tribute = await prisma.tribute.findFirst({
-    where: { id: params.tributeId, userId: session.user.id },
+    where: { id: params.tributeId, userId },
   })
 
   if (!tribute) {

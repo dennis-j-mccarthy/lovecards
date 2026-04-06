@@ -18,7 +18,7 @@ interface ContributionCardProps {
 function AvatarCircle({ src, name }: { src?: string | null; name: string }) {
   if (src) {
     return (
-      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-[#d4c5a9]">
+      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-[#e5e7eb]">
         <img src={src} alt={name} className="w-full h-full object-cover" />
       </div>
     )
@@ -31,8 +31,8 @@ function AvatarCircle({ src, name }: { src?: string | null; name: string }) {
     .slice(0, 2)
     .toUpperCase()
   return (
-    <div className="w-10 h-10 rounded-full bg-[#f0e8d8] flex items-center justify-center flex-shrink-0 border border-[#d4c5a9]">
-      <span className="text-xs font-medium text-[#8b7355]">{initials || "?"}</span>
+    <div className="w-10 h-10 rounded-full bg-[#f0e8d8] flex items-center justify-center flex-shrink-0 border border-[#e5e7eb]">
+      <span className="text-xs font-medium text-[#800020]">{initials || "?"}</span>
     </div>
   )
 }
@@ -52,23 +52,24 @@ export function ContributionCard({
 
   const isAnon = contribution.isAnonymous
   const name = isAnon ? "Anonymous" : contribution.contributorName ?? "A friend"
+  const hasCitation = !!contribution.citationSource
   const isAccordion = !!onToggle
 
   // Anonymous — always compact dark box
   if (isAnon) {
     return (
       <div
-        className={`border border-[#2d2d2d] bg-[#1a1a1a] flex items-center gap-3 p-4 ${isAccordion ? "cursor-pointer" : ""}`}
+        className={`border border-[#1f2937] bg-[#111827] flex items-center gap-3 p-4 rounded-xl ${isAccordion ? "cursor-pointer" : ""}`}
         onClick={isAccordion ? onToggle : undefined}
       >
         <div className="w-10 h-10 rounded-full bg-[#333] flex items-center justify-center flex-shrink-0">
-          <span className="text-[#666] text-xs">?</span>
+          <span className="text-gray-500 text-xs">?</span>
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[#555] text-xs tracking-[2px] uppercase">Anonymous</p>
           {isExpanded && contribution.message ? (
             <>
-              <blockquote className="text-sm leading-relaxed text-[#888] font-serif italic mt-2">
+              <blockquote className="text-sm leading-relaxed text-gray-400 font-serif italic mt-2">
                 &ldquo;{contribution.message}&rdquo;
               </blockquote>
               {isOwner && (
@@ -76,7 +77,7 @@ export function ContributionCard({
                   {onEdit && (
                     <button
                       onClick={(e) => { e.stopPropagation(); setEditMode(true) }}
-                      className="text-xs text-[#666] hover:text-[#aaa] transition-colors"
+                      className="text-xs text-gray-500 hover:text-[#aaa] transition-colors"
                     >
                       Edit
                     </button>
@@ -84,7 +85,7 @@ export function ContributionCard({
                   {onHide && (
                     <button
                       onClick={(e) => { e.stopPropagation(); onHide(contribution.id) }}
-                      className="text-xs text-[#666] hover:text-yellow-400 transition-colors"
+                      className="text-xs text-gray-500 hover:text-yellow-400 transition-colors"
                     >
                       Hide
                     </button>
@@ -92,7 +93,7 @@ export function ContributionCard({
                   {onDelete && !confirmDelete && (
                     <button
                       onClick={(e) => { e.stopPropagation(); setConfirmDelete(true) }}
-                      className="text-xs text-[#666] hover:text-red-400 transition-colors"
+                      className="text-xs text-gray-500 hover:text-red-400 transition-colors"
                     >
                       Delete
                     </button>
@@ -108,7 +109,7 @@ export function ContributionCard({
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); setConfirmDelete(false) }}
-                        className="text-xs text-[#666] hover:text-[#aaa] transition-colors"
+                        className="text-xs text-gray-500 hover:text-[#aaa] transition-colors"
                       >
                         No
                       </button>
@@ -144,13 +145,15 @@ export function ContributionCard({
   if (isAccordion && !isExpanded) {
     return (
       <div
-        className="border border-[#d4c5a9] bg-white flex items-center gap-3 p-4 cursor-pointer hover:bg-[#faf9f7] transition-colors"
+        className="border border-[#e5e7eb] bg-white flex items-center gap-3 p-4 cursor-pointer hover:bg-white transition-colors rounded-xl"
         onClick={onToggle}
       >
         <AvatarCircle src={contribution.avatarUrl} name={name} />
         <div className="flex-1 min-w-0">
-          <p className="text-xs tracking-[1px] uppercase text-[#8b7355]">{name}</p>
-          <p className="text-sm text-[#666] mt-0.5 truncate">
+          <p className="text-xs tracking-[1px] uppercase text-[#800020]">
+            {hasCitation ? `Shared by ${name}` : name}
+          </p>
+          <p className="text-sm text-gray-500 mt-0.5 truncate">
             {contribution.message
               ? `"${contribution.message.slice(0, 80)}${contribution.message.length > 80 ? "..." : ""}"`
               : contribution.photoUrl
@@ -175,7 +178,7 @@ export function ContributionCard({
 
   // Expanded view (or non-accordion full view)
   return (
-    <div className="border border-[#d4c5a9] bg-white flex flex-col gap-3 fade-in-up overflow-hidden">
+    <div className="border border-[#e5e7eb] bg-white flex flex-col gap-3 fade-in-up overflow-hidden rounded-xl shadow-sm">
       {/* Clickable header (accordion mode) */}
       {isAccordion && (
         <div
@@ -183,7 +186,9 @@ export function ContributionCard({
           onClick={onToggle}
         >
           <AvatarCircle src={contribution.avatarUrl} name={name} />
-          <p className="text-xs tracking-[1px] uppercase text-[#8b7355] flex-1">{name}</p>
+          <p className="text-xs tracking-[1px] uppercase text-[#800020] flex-1">
+            {hasCitation ? `Shared by ${name}` : name}
+          </p>
           <svg
             width="16"
             height="16"
@@ -198,21 +203,13 @@ export function ContributionCard({
         </div>
       )}
 
-      <div className="p-5 pt-0 flex flex-col gap-3">
+      <div className="p-5 pt-4 flex flex-col gap-3">
         {!isAccordion && (
           <div className="flex items-center gap-3 pt-1">
             <AvatarCircle src={contribution.avatarUrl} name={name} />
-            <p className="text-xs tracking-[1px] uppercase text-[#8b7355]">{name}</p>
-          </div>
-        )}
-
-        {contribution.photoUrl && (
-          <div className="w-full h-48 overflow-hidden -mx-5 px-5">
-            <img
-              src={contribution.photoUrl}
-              alt={`Photo from ${name}`}
-              className="w-full h-full object-cover rounded"
-            />
+            <p className="text-xs tracking-[1px] uppercase text-[#800020]">
+              {hasCitation ? `Shared by ${name}` : name}
+            </p>
           </div>
         )}
 
@@ -221,7 +218,7 @@ export function ContributionCard({
             <textarea
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
-              className="w-full border border-[#d4c5a9] rounded p-3 text-sm font-serif italic text-[#2d2d2d] bg-[#faf9f7] resize-none focus:outline-none focus:border-[#8b7355]"
+              className="w-full border border-[#e5e7eb] rounded p-3 text-sm font-serif italic text-[#1f2937] bg-white resize-none focus:outline-none focus:border-[#800020]"
               rows={4}
               maxLength={1000}
               onClick={(e) => e.stopPropagation()}
@@ -235,7 +232,7 @@ export function ContributionCard({
                   }
                   setEditMode(false)
                 }}
-                className="text-xs bg-[#1a1a1a] text-white px-3 py-1.5 hover:bg-[#333] transition-colors"
+                className="text-xs bg-[#111827] text-white px-3 py-1.5 hover:bg-[#333] transition-colors"
               >
                 Save
               </button>
@@ -245,7 +242,7 @@ export function ContributionCard({
                   setEditText(contribution.message ?? "")
                   setEditMode(false)
                 }}
-                className="text-xs text-[#999] hover:text-[#666] transition-colors"
+                className="text-xs text-gray-400 hover:text-gray-500 transition-colors"
               >
                 Cancel
               </button>
@@ -253,14 +250,31 @@ export function ContributionCard({
           </div>
         ) : (
           contribution.message && (
-            <blockquote className="text-sm leading-relaxed text-[#2d2d2d] font-serif italic">
-              &ldquo;{contribution.message}&rdquo;
-            </blockquote>
+            <div>
+              <blockquote className="text-sm leading-relaxed text-[#1f2937] font-serif italic">
+                &ldquo;{contribution.message}&rdquo;
+              </blockquote>
+              {hasCitation && (
+                <p className="text-xs text-gray-400 mt-2 font-serif">
+                  — {contribution.citationSource}
+                </p>
+              )}
+            </div>
           )
         )}
 
+        {contribution.photoUrl && (
+          <div className="w-full h-48 overflow-hidden -mx-5 px-5">
+            <img
+              src={contribution.photoUrl}
+              alt={`Photo from ${name}`}
+              className="w-full h-full object-cover rounded"
+            />
+          </div>
+        )}
+
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#f0e8d8]">
-          <p className="text-xs text-[#bbb]">
+          <p className="text-xs text-gray-300">
             {formatDate(contribution.createdAt)}
           </p>
           {isOwner && (
@@ -272,7 +286,7 @@ export function ContributionCard({
                     setEditText(contribution.message ?? "")
                     setEditMode(true)
                   }}
-                  className="text-xs text-[#bbb] hover:text-[#8b7355] transition-colors"
+                  className="text-xs text-gray-300 hover:text-[#800020] transition-colors"
                 >
                   Edit
                 </button>
@@ -283,7 +297,7 @@ export function ContributionCard({
                     e.stopPropagation()
                     onHide(contribution.id)
                   }}
-                  className="text-xs text-[#bbb] hover:text-yellow-600 transition-colors"
+                  className="text-xs text-gray-300 hover:text-yellow-600 transition-colors"
                 >
                   Hide
                 </button>
@@ -294,7 +308,7 @@ export function ContributionCard({
                     e.stopPropagation()
                     setConfirmDelete(true)
                   }}
-                  className="text-xs text-[#bbb] hover:text-red-400 transition-colors"
+                  className="text-xs text-gray-300 hover:text-red-400 transition-colors"
                 >
                   Delete
                 </button>
@@ -316,7 +330,7 @@ export function ContributionCard({
                       e.stopPropagation()
                       setConfirmDelete(false)
                     }}
-                    className="text-xs text-[#999] hover:text-[#666] transition-colors"
+                    className="text-xs text-gray-400 hover:text-gray-500 transition-colors"
                   >
                     Cancel
                   </button>

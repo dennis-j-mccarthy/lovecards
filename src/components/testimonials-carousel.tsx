@@ -68,14 +68,14 @@ function TestimonialCard({ t }: { t: Testimonial }) {
   const colors = roleColors[t.role]
   return (
     <div
-      className="flex-shrink-0 w-[300px] border border-[#d4c5a9] bg-white p-6 flex flex-col gap-4"
+      className="flex-shrink-0 w-[300px] border border-[#e5e7eb] bg-white p-6 flex flex-col gap-4"
       style={{ minHeight: 220 }}
     >
-      <blockquote className="text-sm leading-relaxed text-[#2d2d2d] font-serif italic flex-1">
+      <blockquote className="text-sm leading-relaxed text-[#1f2937] font-serif italic flex-1">
         &ldquo;{t.quote}&rdquo;
       </blockquote>
       <div className="flex flex-col gap-1.5">
-        <p className="text-sm font-medium text-[#1a1a1a]">{t.name}</p>
+        <p className="text-sm font-medium text-[#111827]">{t.name}</p>
         <div className="flex items-center gap-2">
           <span
             className="text-[10px] font-medium tracking-[1px] uppercase px-3 py-1 rounded-full"
@@ -87,7 +87,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
           >
             {t.role}
           </span>
-          <span className="text-xs text-[#999]">{t.context}</span>
+          <span className="text-xs text-gray-400">{t.context}</span>
         </div>
       </div>
     </div>

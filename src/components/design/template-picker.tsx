@@ -14,8 +14,8 @@ const THEME_PREVIEWS: Record<
   string,
   { bg: string; cardBg: string; accent: string; border: string }
 > = {
-  classic: { bg: "#faf9f7", cardBg: "#fff", accent: "#8b7355", border: "#d4c5a9" },
-  dark: { bg: "#1a1a1a", cardBg: "#2d2d2d", accent: "#c9a96e", border: "#444" },
+  classic: { bg: "#ffffff", cardBg: "#fff", accent: "#800020", border: "#e5e7eb" },
+  dark: { bg: "#111827", cardBg: "#1f2937", accent: "#818cf8", border: "#444" },
   floral: { bg: "#fdf6f0", cardBg: "#fff9f5", accent: "#c17d5c", border: "#e8c9b0" },
   minimalist: { bg: "#f5f5f5", cardBg: "#fff", accent: "#666", border: "#e0e0e0" },
 }
@@ -43,8 +43,8 @@ export function TemplatePicker({ templates, selectedId, tributeId }: TemplatePic
 
   if (templates.length === 0) {
     return (
-      <div className="text-center py-16 border border-dashed border-[#d4c5a9]">
-        <p className="text-[#999] text-sm">No design templates available yet.</p>
+      <div className="text-center py-16 border border-dashed border-[#e5e7eb]">
+        <p className="text-gray-400 text-sm">No design templates available yet.</p>
       </div>
     )
   }
@@ -62,8 +62,8 @@ export function TemplatePicker({ templates, selectedId, tributeId }: TemplatePic
             disabled={saving}
             className={`text-left border-2 transition-all ${
               isSelected
-                ? "border-[#8b7355] shadow-md"
-                : "border-[#d4c5a9] hover:border-[#8b7355]"
+                ? "border-[#800020] shadow-md"
+                : "border-[#e5e7eb] hover:border-[#800020]"
             }`}
           >
             {/* Preview miniature */}

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { upload } from "@vercel/blob/client"
 
 export function useUpload() {
   const [uploading, setUploading] = useState(false)
@@ -12,11 +11,21 @@ export function useUpload() {
     setError(null)
 
     try {
+      const formData = new FormData()
+      formData.append("file", file)
+
       const tokenParam = token ? `?token=${token}` : ""
-      const { url } = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: `/api/upload${tokenParam}`,
+      const res = await fetch(`/api/upload${tokenParam}`, {
+        method: "POST",
+        body: formData,
       })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || "Upload failed")
+      }
+
+      const { url } = await res.json()
       return url
     } catch (err) {
       const msg = (err as Error).message

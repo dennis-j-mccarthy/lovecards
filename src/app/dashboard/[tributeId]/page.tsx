@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { getDbUser } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
@@ -8,6 +8,7 @@ import { DashboardLiveFeed } from "@/components/dashboard/dashboard-live-feed"
 import { CopyButton } from "@/components/dashboard/copy-button"
 import { TributeHeader } from "@/components/dashboard/tribute-header"
 import { DeleteTributeButton } from "@/components/dashboard/delete-tribute-button"
+import { StepProgression } from "@/components/dashboard/step-progression"
 import { absoluteUrl } from "@/lib/utils"
 
 export default async function TributeDashboardPage({
@@ -15,11 +16,11 @@ export default async function TributeDashboardPage({
 }: {
   params: { tributeId: string }
 }) {
-  const session = await auth()
-  if (!session?.user?.id) redirect("/sign-in")
+  const user = await getDbUser()
+  if (!user) redirect("/sign-in")
 
   const tribute = await prisma.tribute.findFirst({
-    where: { id: params.tributeId, userId: session.user.id },
+    where: { id: params.tributeId, userId: user.id },
     include: {
       contributions: {
         where: { status: "APPROVED" },
@@ -43,53 +44,10 @@ export default async function TributeDashboardPage({
   const publicContributions = tribute.contributions.map(toPublicContribution)
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
-      {/* Nav */}
-      <nav className="border-b border-[#d4c5a9] px-6 py-4">
-        <div className="flex justify-center mb-4">
-          <Link href="/">
-            <img src="/logo.png" alt="Love Cards" className="h-[200px]" />
-          </Link>
-        </div>
-        <div className="max-w-6xl mx-auto flex items-center gap-6">
-          <Link href="/dashboard" className="text-xs tracking-[3px] uppercase text-[#8b7355]">
-            &larr; My Tributes
-          </Link>
-          <div className="flex-1" />
-          <Link
-            href={`/dashboard/${tribute.id}/invite`}
-            className="text-sm text-[#666] hover:text-[#1a1a1a] transition-colors"
-          >
-            Invite
-          </Link>
-          <Link
-            href={`/dashboard/${tribute.id}/design`}
-            className="text-sm text-[#666] hover:text-[#1a1a1a] transition-colors"
-          >
-            Design
-          </Link>
-          {tribute.status === "COMPLETED" && tribute.pdfUrl && (
-            <a
-              href={tribute.pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm border border-[#8b7355] text-[#8b7355] px-3 py-1.5 hover:bg-[#8b7355] hover:text-white transition-colors"
-            >
-              Download PDF
-            </a>
-          )}
-          {(tribute.status === "ACTIVE" || tribute.status === "CLOSED") && (
-            <Link
-              href={`/dashboard/${tribute.id}/generate`}
-              className="text-sm bg-[#1a1a1a] text-white px-4 py-2 hover:bg-[#333] transition-colors"
-            >
-              Generate Cards
-            </Link>
-          )}
-        </div>
-      </nav>
+    <div className="min-h-screen bg-[#fafafa]">
+      <StepProgression tributeId={tribute.id} activeStep={2} />
 
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-10">
         {/* Header with edit/delete */}
         <TributeHeader
           tributeId={tribute.id}
@@ -99,6 +57,11 @@ export default async function TributeDashboardPage({
           birthDate={tribute.birthDate?.toISOString() ?? null}
           passingDate={tribute.passingDate?.toISOString() ?? null}
           location={tribute.location}
+          shipToName={tribute.shipToName}
+          shipToAddress={tribute.shipToAddress}
+          shipToCity={tribute.shipToCity}
+          shipToState={tribute.shipToState}
+          shipToZip={tribute.shipToZip}
         />
 
         {/* Stats */}
@@ -117,23 +80,23 @@ export default async function TributeDashboardPage({
               value: formatDate(tribute.createdAt),
             },
           ].map(({ label, value }) => (
-            <div key={label} className="border border-[#d4c5a9] bg-white p-4">
-              <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-1">
+            <div key={label} className="border border-[#e5e7eb] bg-white p-4">
+              <p className="text-xs tracking-[2px] uppercase text-[#800020] mb-1">
                 {label}
               </p>
-              <p className="text-lg text-[#1a1a1a]">{value}</p>
+              <p className="text-lg text-[#111827]">{value}</p>
             </div>
           ))}
         </div>
 
         {/* Share link */}
         {shareUrl && (
-          <div className="border border-[#d4c5a9] bg-white p-4 mb-8 flex items-center gap-3">
+          <div className="border border-[#e5e7eb] bg-white p-4 mb-8 flex items-center gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-1">
+              <p className="text-xs tracking-[2px] uppercase text-[#800020] mb-1">
                 Shareable Link
               </p>
-              <p className="text-sm text-[#666] truncate">{shareUrl}</p>
+              <p className="text-sm text-gray-500 truncate">{shareUrl}</p>
             </div>
             <CopyButton text={shareUrl} />
           </div>
@@ -149,14 +112,14 @@ export default async function TributeDashboardPage({
         <div className="mt-8 text-center">
           <Link
             href={`/dashboard/${tribute.id}/invite`}
-            className="inline-flex items-center gap-2 border border-[#d4c5a9] text-[#8b7355] px-6 py-3 text-sm tracking-[1px] uppercase hover:bg-[#f5f0e8] transition-colors"
+            className="inline-flex items-center gap-2 border border-[#e5e7eb] text-[#800020] px-6 py-3 text-sm tracking-[1px] uppercase hover:bg-[#fdf2f4] transition-colors"
           >
             + Invite More People
           </Link>
         </div>
 
         {/* Danger zone */}
-        <div className="mt-12 pt-8 border-t border-[#e8e0d4]">
+        <div className="mt-12 pt-8 border-t border-[#e5e7eb]">
           <DeleteTributeButton tributeId={tribute.id} />
         </div>
       </div>

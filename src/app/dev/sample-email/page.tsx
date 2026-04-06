@@ -18,7 +18,7 @@ export default function SampleEmailPage() {
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 24px;">
         ${purchaserName} has invited you to share your memories of <strong>${honoredName}</strong>
-        as part of a tribute card collection — a beautiful keepsake that will be printed and preserved.
+        as part of a Love Card Box — a beautiful keepsake that will be printed and preserved.
       </p>
 
       <p style="font-size: 16px; line-height: 1.7; margin-bottom: 32px;">

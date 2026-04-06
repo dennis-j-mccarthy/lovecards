@@ -7,4 +7,4 @@ export function getStripe(): Stripe {
   return new Stripe(process.env.STRIPE_SECRET_KEY)
 }
 
-export const TRIBUTE_PRICE_CENTS = 9900 // $99.00
+export const TRIBUTE_PRICE_CENTS = 4900 // $49.00

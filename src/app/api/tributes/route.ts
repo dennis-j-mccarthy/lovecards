@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { generateSlug } from "@/lib/utils"
 import { z } from "zod"
@@ -13,11 +13,16 @@ const createTributeSchema = z.object({
   birthDate: z.string().optional(),
   passingDate: z.string().optional(),
   location: z.string().max(100).optional(),
+  shipToName: z.string().max(100).optional(),
+  shipToAddress: z.string().max(200).optional(),
+  shipToCity: z.string().max(100).optional(),
+  shipToState: z.string().max(50).optional(),
+  shipToZip: z.string().max(20).optional(),
 })
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
@@ -33,7 +38,7 @@ export async function POST(req: NextRequest) {
   const payment = await prisma.payment.findFirst({
     where: {
       id: data.paymentId,
-      userId: session.user.id,
+      userId,
       status: "COMPLETED",
     },
     include: { tribute: true },
@@ -44,14 +49,14 @@ export async function POST(req: NextRequest) {
   }
 
   if (payment.tribute) {
-    return NextResponse.json({ error: "Tribute already created for this payment" }, { status: 409 })
+    return NextResponse.json({ error: "Love Card Box already created for this payment" }, { status: 409 })
   }
 
   const slug = generateSlug(data.honoredName)
 
   const tribute = await prisma.tribute.create({
     data: {
-      userId: session.user.id,
+      userId,
       paymentId: data.paymentId,
       slug,
       honoredName: data.honoredName,
@@ -61,6 +66,11 @@ export async function POST(req: NextRequest) {
       birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
       passingDate: data.passingDate ? new Date(data.passingDate) : undefined,
       location: data.location,
+      shipToName: data.shipToName,
+      shipToAddress: data.shipToAddress,
+      shipToCity: data.shipToCity,
+      shipToState: data.shipToState,
+      shipToZip: data.shipToZip,
       status: "ACTIVE",
     },
   })
@@ -76,13 +86,13 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(_req: NextRequest) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const tributes = await prisma.tribute.findMany({
-    where: { userId: session.user.id },
+    where: { userId },
     include: {
       _count: { select: { contributions: true } },
       template: true,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUser } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { sendInviteEmail } from "@/lib/resend"
 import { absoluteUrl } from "@/lib/utils"
@@ -20,13 +20,13 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { tributeId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const user = await getDbUser()
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const tribute = await prisma.tribute.findFirst({
-    where: { id: params.tributeId, userId: session.user.id },
+    where: { id: params.tributeId, userId: user.id },
   })
 
   if (!tribute) {
@@ -40,7 +40,7 @@ export async function POST(
   }
 
   const { recipients } = parsed.data
-  const purchaserName = session.user.name ?? "Someone special"
+  const purchaserName = user.name ?? "Someone special"
 
   const results = await Promise.allSettled(
     recipients.map(async ({ email, name, cellPhone, phone }) => {

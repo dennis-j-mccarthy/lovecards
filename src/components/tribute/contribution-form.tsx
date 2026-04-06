@@ -28,42 +28,42 @@ function InspirationPopup({ honoredName }: { honoredName: string }) {
       <button
         type="button"
         onClick={toggle}
-        className="inline-flex items-center gap-2 border border-[#d4c5a9] bg-white px-3 py-1.5 text-xs text-[#8b7355] hover:bg-[#f5f0e8] hover:border-[#8b7355] transition-colors"
+        className="inline-flex items-center gap-2 border border-[#e5e7eb] bg-white px-3 py-1.5 text-xs text-[#800020] hover:bg-[#fdf2f4] hover:border-[#800020] transition-colors"
       >
-        <span className="w-4 h-4 rounded-full bg-[#8b7355] text-white inline-flex items-center justify-center text-[10px] font-bold leading-none">
+        <span className="w-4 h-4 rounded-full bg-[#800020] text-white inline-flex items-center justify-center text-[10px] font-bold leading-none">
           ?
         </span>
         What makes a great card?
       </button>
 
       {open && (
-        <div className="absolute left-0 bottom-full mb-2 w-80 bg-white border border-[#d4c5a9] shadow-lg z-50 rounded-sm">
+        <div className="absolute left-0 bottom-full mb-2 w-80 bg-white border border-[#e5e7eb] shadow-lg z-50 rounded-sm">
           <div className="flex items-center justify-between px-4 pt-3 pb-2">
-            <p className="text-xs tracking-[2px] uppercase text-[#8b7355] font-medium">
+            <p className="text-xs tracking-[2px] uppercase text-[#800020] font-medium">
               What Makes a Great Card
             </p>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-[#ccc] hover:text-[#666] text-lg leading-none"
+              className="text-gray-300 hover:text-gray-500 text-lg leading-none"
             >
               &times;
             </button>
           </div>
           <div className="px-4 pb-4">
-            <p className="text-xs text-[#666] leading-relaxed mb-3">
+            <p className="text-xs text-gray-500 leading-relaxed mb-3">
               The best cards come from the heart. Here are some ideas:
             </p>
-            <ul className="space-y-2.5 text-xs text-[#2d2d2d]">
+            <ul className="space-y-2.5 text-xs text-[#1f2937]">
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>A favorite memory</strong> &mdash; a moment with{" "}
                   {honoredName} that makes you smile or feel grateful
                 </span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>A quote, poem, or passage</strong> &mdash; from a book,
                   a movie, a song &mdash; any words that remind you of them.
@@ -73,21 +73,21 @@ function InspirationPopup({ honoredName }: { honoredName: string }) {
                 </span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>A scripture passage</strong> &mdash; a verse that speaks
                   to your relationship
                 </span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>Something you&apos;re looking forward to</strong> &mdash;
                   a trip, a milestone, a tradition you share
                 </span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>Something you wouldn&apos;t normally say</strong> &mdash;
                   the words that feel a little too intimate, a little too
@@ -95,14 +95,14 @@ function InspirationPopup({ honoredName }: { honoredName: string }) {
                 </span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>A story only you know</strong> &mdash; inside jokes,
                   quiet moments, things that are uniquely yours
                 </span>
               </li>
               <li className="flex items-start gap-1.5">
-                <span className="text-[#8b7355] mt-px flex-shrink-0">&#10045;</span>
+                <span className="text-[#800020] mt-px flex-shrink-0">&#10045;</span>
                 <span>
                   <strong>A photo</strong> &mdash; a picture can say what words
                   can&apos;t. Add your avatar so they know who it&apos;s from,
@@ -110,7 +110,7 @@ function InspirationPopup({ honoredName }: { honoredName: string }) {
                 </span>
               </li>
             </ul>
-            <p className="text-[10px] text-[#999] mt-3 italic">
+            <p className="text-[10px] text-gray-400 mt-3 italic">
               There&apos;s no wrong answer. Write what feels true.
             </p>
           </div>
@@ -130,6 +130,7 @@ interface ContributionFormProps {
 
 type DraftCard = {
   message: string
+  citationSource: string
   photoFile: File | null
   photoPreview: string | null
 }
@@ -152,6 +153,7 @@ export function ContributionForm({
 
   // Current card composer
   const [message, setMessage] = useState("")
+  const [citationSource, setCitationSource] = useState("")
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
@@ -195,9 +197,10 @@ export function ContributionForm({
     setError(null)
     setDraftCards((prev) => [
       ...prev,
-      { message: message.trim(), photoFile, photoPreview },
+      { message: message.trim(), citationSource: citationSource.trim(), photoFile, photoPreview },
     ])
     setMessage("")
+    setCitationSource("")
     setPhotoFile(null)
     setPhotoPreview(null)
     if (fileInputRef.current) fileInputRef.current.value = ""
@@ -249,12 +252,16 @@ export function ContributionForm({
             isAnonymous,
             avatarUrl,
             message: card.message || undefined,
+            citationSource: card.citationSource || undefined,
             photoUrl,
           }),
         })
 
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error ?? "Submission failed")
+        if (!res.ok) {
+          const msg = typeof data.error === "string" ? data.error : JSON.stringify(data.error)
+          throw new Error(msg ?? "Submission failed")
+        }
       }
 
       onSuccess()
@@ -280,7 +287,7 @@ export function ContributionForm({
         <div className="space-y-4">
           {/* Avatar */}
           <div>
-            <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+            <label className="block text-xs tracking-[2px] uppercase text-[#800020] mb-2">
               Your Photo (optional)
             </label>
             <div className="flex items-center gap-4">
@@ -288,7 +295,7 @@ export function ContributionForm({
                 type="button"
                 onClick={() => avatarInputRef.current?.click()}
                 disabled={submitting}
-                className="relative w-16 h-16 rounded-full border-2 border-dashed border-[#d4c5a9] overflow-hidden flex items-center justify-center hover:border-[#8b7355] transition-colors flex-shrink-0 disabled:opacity-50"
+                className="relative w-16 h-16 rounded-full border-2 border-dashed border-[#e5e7eb] overflow-hidden flex items-center justify-center hover:border-[#800020] transition-colors flex-shrink-0 disabled:opacity-50"
               >
                 {avatarPreview ? (
                   <img
@@ -303,7 +310,7 @@ export function ContributionForm({
                   </svg>
                 )}
               </button>
-              <p className="text-xs text-[#999]">
+              <p className="text-xs text-gray-400">
                 {avatarPreview ? "Click to change" : "This will appear on your cards"}
               </p>
             </div>
@@ -317,7 +324,7 @@ export function ContributionForm({
           </div>
 
           <div>
-            <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+            <label className="block text-xs tracking-[2px] uppercase text-[#800020] mb-2">
               Your Name
             </label>
             <input
@@ -326,12 +333,12 @@ export function ContributionForm({
               onChange={(e) => setName(e.target.value)}
               placeholder="How you know them"
               disabled={submitting}
-              className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355] disabled:opacity-50"
+              className="w-full border border-[#e5e7eb] bg-white px-4 py-3 text-sm outline-none focus:border-[#800020] disabled:opacity-50"
             />
           </div>
 
           <div>
-            <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+            <label className="block text-xs tracking-[2px] uppercase text-[#800020] mb-2">
               Email (optional, kept private)
             </label>
             <input
@@ -340,12 +347,12 @@ export function ContributionForm({
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
               disabled={submitting}
-              className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355] disabled:opacity-50"
+              className="w-full border border-[#e5e7eb] bg-white px-4 py-3 text-sm outline-none focus:border-[#800020] disabled:opacity-50"
             />
           </div>
 
           <div>
-            <label className="block text-xs tracking-[2px] uppercase text-[#8b7355] mb-2">
+            <label className="block text-xs tracking-[2px] uppercase text-[#800020] mb-2">
               Phone Number (optional, kept private)
             </label>
             <input
@@ -354,7 +361,7 @@ export function ContributionForm({
               onChange={(e) => setPhone(e.target.value)}
               placeholder="(555) 123-4567"
               disabled={submitting}
-              className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355] disabled:opacity-50"
+              className="w-full border border-[#e5e7eb] bg-white px-4 py-3 text-sm outline-none focus:border-[#800020] disabled:opacity-50"
             />
           </div>
 
@@ -365,11 +372,11 @@ export function ContributionForm({
                 checked={smsOptIn}
                 onChange={(e) => setSmsOptIn(e.target.checked)}
                 disabled={submitting}
-                className="w-4 h-4 mt-0.5 border-[#d4c5a9] rounded accent-[#8b7355]"
+                className="w-4 h-4 mt-0.5 border-[#e5e7eb] rounded accent-[#800020]"
               />
               <div>
-                <p className="text-sm text-[#2d2d2d]">Text me with reminders or updates</p>
-                <p className="text-xs text-[#999]">
+                <p className="text-sm text-[#1f2937]">Text me with reminders or updates</p>
+                <p className="text-xs text-gray-400">
                   Standard message rates may apply. We&apos;ll only text about this tribute.
                 </p>
               </div>
@@ -385,96 +392,135 @@ export function ContributionForm({
             checked={isAnonymous}
             onChange={(e) => setIsAnonymous(e.target.checked)}
             disabled={submitting}
-            className="w-4 h-4 border-[#d4c5a9] rounded accent-[#8b7355]"
+            className="w-4 h-4 border-[#e5e7eb] rounded accent-[#800020]"
           />
           <div>
-            <p className="text-sm text-[#2d2d2d]">Stay anonymous</p>
-            <p className="text-xs text-[#999]">
+            <p className="text-sm text-[#1f2937]">Stay anonymous</p>
+            <p className="text-xs text-gray-400">
               Your cards will appear with a private black box in the gallery
             </p>
           </div>
         </label>
       )}
 
-      {/* Queued cards */}
+      {/* Queued cards — styled like real contribution cards */}
       {totalCards > 0 && (
-        <div className="space-y-2">
-          <p className="text-xs tracking-[2px] uppercase text-[#8b7355]">
+        <div className="space-y-4">
+          <p className="text-xs tracking-[2px] uppercase text-[#800020]">
             {totalCards} {totalCards === 1 ? "card" : "cards"} ready
           </p>
-          <div className="space-y-2">
+          <div className="space-y-4">
             {draftCards.map((card, i) => (
               <div
                 key={i}
-                className="flex items-start gap-3 border border-[#d4c5a9] bg-[#faf9f7] p-3"
+                className="border border-[#e5e7eb] bg-white shadow-sm overflow-hidden rounded-xl"
               >
+                {/* Card header */}
+                <div className="flex items-center gap-3 p-4 pb-3">
+                  {avatarPreview && !isAnonymous ? (
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-[#e5e7eb]">
+                      <img src={avatarPreview} alt="You" className="w-full h-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-[#fdf2f4] flex items-center justify-center flex-shrink-0 border border-[#e5e7eb]">
+                      <span className="text-xs font-medium text-[#800020]">
+                        {isAnonymous ? "?" : (name || "You").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                  <p className="text-xs tracking-[1px] uppercase text-[#800020] flex-1">
+                    {card.citationSource
+                      ? `Shared by ${isAnonymous ? "Anonymous" : name || "You"}`
+                      : isAnonymous ? "Anonymous" : name || "You"}
+                  </p>
+                  {!submitting && (
+                    <button
+                      type="button"
+                      onClick={() => removeCard(i)}
+                      className="text-xs text-gray-300 hover:text-red-400 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                {/* Card photo */}
                 {card.photoPreview && (
-                  <div className="relative w-12 h-12 flex-shrink-0">
-                    <Image
+                  <div className="w-full h-48 overflow-hidden px-5">
+                    <img
                       src={card.photoPreview}
                       alt="Photo"
-                      fill
-                      className="object-cover"
+                      className="w-full h-full object-cover rounded"
                     />
                   </div>
                 )}
-                <p className="text-sm text-[#2d2d2d] flex-1 line-clamp-2">
-                  {card.message || "(Photo only)"}
-                </p>
-                {!submitting && (
-                  <button
-                    type="button"
-                    onClick={() => removeCard(i)}
-                    className="text-xs text-[#ccc] hover:text-red-400 flex-shrink-0"
-                  >
-                    Remove
-                  </button>
-                )}
+
+                {/* Card message */}
+                <div className="p-5 pt-3">
+                  {card.message ? (
+                    <div>
+                      <blockquote className="text-sm leading-relaxed text-[#1f2937] font-serif italic">
+                        &ldquo;{card.message}&rdquo;
+                      </blockquote>
+                      {card.citationSource && (
+                        <p className="text-xs text-gray-400 mt-2 font-serif">
+                          — {card.citationSource}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-400 italic">Photo card</p>
+                  )}
+                  <div className="pt-3 mt-3 border-t border-[#f0e8d8]">
+                    <p className="text-xs text-gray-300">Just now</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Card composer */}
+      {/* Card composer — looks like a card being written */}
       {!submitting && (
-        <div className="space-y-4 border border-dashed border-[#d4c5a9] p-4">
-          <div className="flex items-center justify-between">
-            <p className="text-xs tracking-[2px] uppercase text-[#8b7355]">
-              {totalCards === 0 ? "Write a card" : "Add another card"}
-            </p>
+        <div className="border border-[#e5e7eb] bg-white shadow-sm overflow-hidden rounded-xl">
+          {/* Composer header — like a card header */}
+          <div className="flex items-center gap-3 p-4 pb-3 border-b border-[#f0e8d8]">
+            {avatarPreview && !isAnonymous ? (
+              <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-[#e5e7eb]">
+                <img src={avatarPreview} alt="You" className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-[#fdf2f4] flex items-center justify-center flex-shrink-0 border border-[#e5e7eb]">
+                <span className="text-xs font-medium text-[#800020]">
+                  {isAnonymous ? "?" : (name || "You").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "✎"}
+                </span>
+              </div>
+            )}
+            <div className="flex-1">
+              <p className="text-xs tracking-[1px] uppercase text-[#800020]">
+                {isAnonymous ? "Anonymous" : name || "Your Card"}
+              </p>
+            </div>
             <InspirationPopup honoredName={honoredName} />
           </div>
 
-          <div>
-            <textarea
-              rows={4}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              maxLength={1000}
-              placeholder={`Write your message for ${honoredName}...`}
-              className="w-full border border-[#d4c5a9] bg-white px-4 py-3 text-sm outline-none focus:border-[#8b7355] resize-none"
-            />
-            <p className="text-xs text-[#bbb] text-right mt-1">
-              {message.length}/1000
-            </p>
-          </div>
-
-          <div>
+          {/* Photo area */}
+          <div className="px-5 pt-4">
             {photoPreview ? (
-              <div className="relative">
-                <div className="relative w-full h-36">
+              <div className="relative mb-3">
+                <div className="relative w-full h-48 overflow-hidden rounded">
                   <Image
                     src={photoPreview}
                     alt="Photo preview"
                     fill
-                    className="object-cover border border-[#d4c5a9]"
+                    className="object-cover"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={clearPhoto}
-                  className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 hover:bg-black/80"
+                  className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded hover:bg-black/80"
                 >
                   Remove
                 </button>
@@ -483,8 +529,13 @@ export function ContributionForm({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full border border-dashed border-[#d4c5a9] py-6 text-sm text-[#999] hover:border-[#8b7355] hover:text-[#8b7355] transition-colors"
+                className="w-full border border-dashed border-[#e5e7eb] rounded py-8 text-sm text-gray-400 hover:border-[#800020] hover:text-[#800020] transition-colors mb-3 flex items-center justify-center gap-2"
               >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <path d="m21 15-5-5L5 21" />
+                </svg>
                 Add a photo (optional)
               </button>
             )}
@@ -498,13 +549,47 @@ export function ContributionForm({
             />
           </div>
 
-          <button
-            type="button"
-            onClick={addCard}
-            className="w-full border border-[#8b7355] text-[#8b7355] py-3 text-sm tracking-[1px] uppercase hover:bg-[#8b7355] hover:text-white transition-colors"
-          >
-            {totalCards === 0 ? "Add Card" : "Add Another Card"}
-          </button>
+          {/* Message area — styled like the card's italic quote */}
+          <div className="px-5 pb-4">
+            <textarea
+              rows={4}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              maxLength={1000}
+              placeholder={`Write your message for ${honoredName}...`}
+              className="w-full border-0 bg-transparent text-sm font-serif italic text-[#1f2937] outline-none resize-none placeholder:text-gray-300 placeholder:not-italic leading-relaxed"
+            />
+            <p className="text-xs text-gray-300 text-right">
+              {message.length}/1000
+            </p>
+            {message.trim() && (
+              <div className="mt-2">
+                <input
+                  type="text"
+                  value={citationSource}
+                  onChange={(e) => setCitationSource(e.target.value)}
+                  placeholder="Source or author (leave blank if these are your own words)"
+                  className="w-full border-0 border-b border-[#e5e7eb] bg-transparent text-xs text-gray-500 outline-none focus:border-[#800020] py-1 placeholder:text-gray-300"
+                />
+                {citationSource.trim() && (
+                  <p className="text-[10px] text-gray-400 mt-1 italic">
+                    Card will show as &ldquo;Shared by {isAnonymous ? "Anonymous" : name || "you"}&rdquo;
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Card footer */}
+          <div className="px-5 pb-4 pt-2 border-t border-[#f0e8d8]">
+            <button
+              type="button"
+              onClick={addCard}
+              className="w-full border border-[#800020] text-[#800020] py-3 text-sm tracking-[1px] uppercase rounded hover:bg-[#800020] hover:text-white transition-colors"
+            >
+              {totalCards === 0 ? "Add Card" : "Add Another Card"}
+            </button>
+          </div>
         </div>
       )}
 
@@ -514,7 +599,7 @@ export function ContributionForm({
           type="button"
           onClick={handleSubmitAll}
           disabled={submitting}
-          className="w-full bg-[#1a1a1a] text-white py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors disabled:opacity-50"
+          className="w-full bg-[#111827] text-white py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors disabled:opacity-50"
         >
           {submitting
             ? progress

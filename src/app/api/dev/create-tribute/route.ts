@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 
 export const runtime = "nodejs"
 
 // DEV ONLY — bypasses Stripe to create a tribute for testing
 export async function POST() {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   // Create a test payment record
   const payment = await prisma.payment.create({
     data: {
-      userId: session.user.id,
+      userId,
       stripeCheckoutSessionId: `dev_test_${Date.now()}`,
       stripePaymentIntentId: `dev_pi_${Date.now()}`,
       amount: 9900,
@@ -25,7 +25,7 @@ export async function POST() {
   // Create a test tribute
   const tribute = await prisma.tribute.create({
     data: {
-      userId: session.user.id,
+      userId,
       paymentId: payment.id,
       honoredName: "Test Person",
       relationship: "Beloved Friend",

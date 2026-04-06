@@ -9,8 +9,8 @@ const FAN_CARDS = [
     name: "Noah G.",
     avatarUrl: "https://i.pravatar.cc/80?u=noah",
     photoUrl: "https://images.unsplash.com/photo-1757367529666-2521d7002ae4?w=260&h=120&fit=crop",
-    bg: "#faf9f7", color: "#2d2d2d", font: "var(--font-playfair), serif",
-    border: "2px solid #c9a96e", accent: "#c9a96e",
+    bg: "#ffffff", color: "#1f2937", font: "var(--font-playfair), serif",
+    border: "2px solid #818cf8", accent: "#818cf8",
   },
   {
     text: "Your laugh has a way of making any room feel like home.",
@@ -25,8 +25,8 @@ const FAN_CARDS = [
     name: "Finn B.",
     avatarUrl: "https://i.pravatar.cc/80?u=finn",
     photoUrl: "https://images.unsplash.com/photo-1578496780896-7081cc23c111?w=260&h=120&fit=crop",
-    bg: "#f9f6f0", color: "#2d2d2d", font: "var(--font-garamond), serif",
-    border: "1px solid #2d2d2d", accent: "#2d2d2d",
+    bg: "#f9f6f0", color: "#1f2937", font: "var(--font-garamond), serif",
+    border: "1px solid #1f2937", accent: "#1f2937",
   },
   {
     text: "Tell me, what is it you plan to do with your one wild and precious life?",
@@ -41,8 +41,8 @@ const FAN_CARDS = [
     name: "Ben C.",
     avatarUrl: "https://i.pravatar.cc/80?u=ben",
     photoUrl: "https://images.unsplash.com/photo-1723871892806-155bda056c3b?w=260&h=120&fit=crop",
-    bg: "#fffdf9", color: "#1a1a1a", font: "var(--font-dancing), cursive",
-    border: "1px solid #c9a96e", accent: "#c9a96e",
+    bg: "#fffdf9", color: "#111827", font: "var(--font-dancing), cursive",
+    border: "1px solid #818cf8", accent: "#818cf8",
   },
 ]
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { SessionProvider } from "@/components/providers/session-provider"
-import { DevToolbar } from "@/components/dev/dev-toolbar"
+import { ClerkProvider } from "@clerk/nextjs"
+import { Navbar } from "@/components/navbar"
 import {
   Playfair_Display,
   Lora,
@@ -50,11 +50,11 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`antialiased min-h-screen bg-[#faf9f7] text-[#2d2d2d] pb-28 ${fontVars}`}>
-        <SessionProvider>
+      <body className={`antialiased min-h-screen bg-white text-gray-800 pb-28 ${fontVars}`}>
+        <ClerkProvider>
+          <Navbar />
           {children}
-          <DevToolbar />
-        </SessionProvider>
+        </ClerkProvider>
       </body>
     </html>
   )

@@ -32,9 +32,9 @@ export function DashboardLiveFeed({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-normal text-[#1a1a1a]">
+        <h2 className="text-lg font-normal text-[#111827]">
           Contributions
-          <span className="ml-2 text-sm text-[#999]">({merged.length})</span>
+          <span className="ml-2 text-sm text-gray-400">({merged.length})</span>
         </h2>
         <div className="flex items-center gap-2">
           <div
@@ -42,7 +42,7 @@ export function DashboardLiveFeed({
               connected ? "bg-green-400" : "bg-[#ccc]"
             }`}
           />
-          <span className="text-xs text-[#999]">
+          <span className="text-xs text-gray-400">
             {connected ? "Live" : "Connecting..."}
           </span>
         </div>

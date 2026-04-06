@@ -1,5 +1,25 @@
 import { CardLayoutResponse, CardCell } from "./anthropic"
 import { Contribution, DesignTemplate, Tribute } from "@prisma/client"
+import path from "path"
+import { readFileSync } from "fs"
+
+function resolveImageUrl(url: string | null | undefined): string {
+  if (!url) return ""
+  if (url.startsWith("http://") || url.startsWith("https://")) return url
+  if (url.startsWith("/")) {
+    // Convert local file to base64 data URI
+    try {
+      const filePath = path.join(process.cwd(), "public", url)
+      const buffer = readFileSync(filePath)
+      const ext = path.extname(url).slice(1) || "png"
+      const mime = ext === "jpg" ? "image/jpeg" : `image/${ext}`
+      return `data:${mime};base64,${buffer.toString("base64")}`
+    } catch {
+      return url
+    }
+  }
+  return url
+}
 
 type TributeWithContributions = Tribute & {
   contributions: Contribution[]
@@ -46,16 +66,18 @@ function renderCell(
   theme: (typeof DESIGN_THEMES)[string]
 ): string {
   const baseStyle = `
-    border: 1px solid ${theme.border};
-    border-radius: 4px;
-    background: ${theme.cardBg};
+    border: none;
+    background: white;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: ${cell.style.alignment === "center" ? "center" : "flex-start"};
+    align-items: center;
+    text-align: center;
     padding: 16px;
     box-sizing: border-box;
+    width: 100%;
+    height: 100%;
   `
 
   const textSizes: Record<string, string> = {
@@ -67,13 +89,13 @@ function renderCell(
 
   if (cell.type === "honored_photo" && tribute.honoredPhoto) {
     return `<div style="${baseStyle} padding: 0;">
-      <img src="${tribute.honoredPhoto}" alt="${tribute.honoredName}"
+      <img src="${resolveImageUrl(tribute.honoredPhoto)}" alt="${tribute.honoredName}"
            style="width: 100%; height: 100%; object-fit: cover;" />
     </div>`
   }
 
   if (cell.type === "title_cell") {
-    return `<div style="${baseStyle} text-align: center; align-items: center; background: ${theme.bg};">
+    return `<div style="${baseStyle} text-align: center; align-items: center;">
       <p style="font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: ${theme.accent}; margin: 0 0 8px;">In Loving Memory</p>
       <h2 style="font-size: 20px; font-weight: normal; color: ${theme.text}; margin: 0; font-family: Georgia, serif;">${tribute.honoredName}</h2>
       ${tribute.location ? `<p style="font-size: 10px; color: ${theme.accent}; margin: 6px 0 0;">${tribute.location}</p>` : ""}
@@ -81,7 +103,7 @@ function renderCell(
   }
 
   if (cell.type === "decorative") {
-    return `<div style="${baseStyle} align-items: center; background: ${theme.bg};">
+    return `<div style="${baseStyle} align-items: center;">
       <span style="font-size: 24px; opacity: 0.3;">✦</span>
     </div>`
   }
@@ -99,22 +121,32 @@ function renderCell(
     const hasPhoto = contrib?.photoUrl && (contrib.type === "PHOTO" || contrib.type === "TEXT_AND_PHOTO")
 
     if (contrib?.type === "PHOTO" && !contrib.message) {
+      const photoAvatarUrl = !cell.isAnonymous && contrib?.avatarUrl ? resolveImageUrl(contrib.avatarUrl) : null
       return `<div style="${baseStyle} padding: 0; position: relative;">
-        <img src="${contrib.photoUrl}" alt="Memory from ${name}"
+        <img src="${resolveImageUrl(contrib.photoUrl)}" alt="Memory from ${name}"
              style="width: 100%; height: 100%; object-fit: cover;" />
         <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 8px 10px;
-                    background: linear-gradient(transparent, rgba(0,0,0,0.6));">
+                    background: linear-gradient(transparent, rgba(0,0,0,0.6)); display: flex; align-items: center; justify-content: center;">
+          ${photoAvatarUrl ? `<img src="${photoAvatarUrl}" alt="${name}" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-right: 6px; border: 1px solid rgba(255,255,255,0.5);" />` : ""}
           <p style="color: white; font-size: 9px; margin: 0; font-style: italic;">— ${name}</p>
         </div>
       </div>`
     }
 
+    const avatarUrl = !cell.isAnonymous && contrib?.avatarUrl ? resolveImageUrl(contrib.avatarUrl) : null
+    const avatarHtml = avatarUrl
+      ? `<img src="${avatarUrl}" alt="${name}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-right: 6px;" />`
+      : ""
+
     return `<div style="${baseStyle}">
-      ${hasPhoto ? `<img src="${contrib!.photoUrl}" alt="Photo" style="width: 100%; height: 80px; object-fit: cover; border-radius: 2px; margin-bottom: 10px;" />` : ""}
+      ${hasPhoto ? `<img src="${resolveImageUrl(contrib!.photoUrl)}" alt="Photo" style="width: 100%; height: 80px; object-fit: cover; border-radius: 2px; margin-bottom: 10px;" />` : ""}
       ${cell.content ? `<p style="font-size: ${fontSize}; line-height: 1.6; color: ${theme.text}; margin: 0 0 10px; font-family: Georgia, serif; font-style: italic;">
         &ldquo;${cell.content}&rdquo;
       </p>` : ""}
-      <p style="font-size: 9px; color: ${theme.accent}; margin: 0; letter-spacing: 1px; text-transform: uppercase;">— ${name}</p>
+      <div style="display: flex; align-items: center; justify-content: center; margin-top: auto;">
+        ${avatarHtml}
+        <p style="font-size: 9px; color: ${theme.accent}; margin: 0; letter-spacing: 1px; text-transform: uppercase;">— ${name}</p>
+      </div>
     </div>`
   }
 
@@ -130,56 +162,43 @@ export function renderCardPagesHTML(
 
   const pagesHtml = layout.pages
     .map((page) => {
-      // Build grid rows — group cells into rows of 3
       const cells = page.cells
       let gridContent = ""
-      let cellIdx = 0
 
-      while (cellIdx < cells.length) {
-        const cell = cells[cellIdx]
-        const spanCols = cell.spanCols ?? 1
+      for (const cell of cells) {
+        gridContent += `<div style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">${renderCell(cell, tribute, theme)}</div>`
+      }
 
-        const cellHeight = spanCols === 3 ? "200px" : "290px"
-        const cellStyle = `
-          grid-column: span ${spanCols};
-          height: ${cellHeight};
-        `
-
-        gridContent += `<div style="${cellStyle}">${renderCell(cell, tribute, theme)}</div>`
-        cellIdx++
+      // Pad to 9 cells for consistent grid
+      const cellCount = cells.length
+      for (let i = cellCount; i < 9; i++) {
+        gridContent += `<div></div>`
       }
 
       return `<div style="
         width: 816px;
         height: 1056px;
-        background: ${theme.bg};
+        background: white;
         box-sizing: border-box;
-        padding: 48px;
+        padding: 24px;
         page-break-after: always;
-        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       ">
-        <!-- Header -->
-        <div style="text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid ${theme.border};">
-          <p style="font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: ${theme.accent}; margin: 0;">
-            In Loving Memory of ${tribute.honoredName}
-          </p>
-        </div>
-
-        <!-- 3x3 Grid -->
         <div style="
           display: grid;
           grid-template-columns: repeat(3, 1fr);
-          gap: 12px;
-          height: calc(100% - 100px);
+          grid-template-rows: repeat(3, 1fr);
+          gap: 0px;
+          width: 100%;
+          height: 100%;
         ">
           ${gridContent}
-        </div>
-
-        <!-- Footer -->
-        <div style="position: absolute; bottom: 32px; left: 48px; right: 48px; text-align: center; border-top: 1px solid ${theme.border}; padding-top: 12px;">
-          <p style="font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: ${theme.accent}; margin: 0;">
-            Page ${page.pageNumber} of ${layout.totalPages}
-          </p>
         </div>
       </div>`
     })
@@ -208,15 +227,20 @@ export async function generateMemorialPDF(
   layout: CardLayoutResponse,
   tribute: TributeWithContributions
 ): Promise<Buffer> {
-  // Dynamic import to avoid issues in non-serverless environments during dev
-  const puppeteer = await import("puppeteer-core")
-  const chromium = await import("@sparticuz/chromium")
-
-  const browser = await puppeteer.default.launch({
-    args: chromium.default.args,
-    executablePath: await chromium.default.executablePath(),
-    headless: true,
-  })
+  // Use regular puppeteer locally, @sparticuz/chromium in production
+  let browser
+  if (process.env.NODE_ENV === "production") {
+    const puppeteer = await import("puppeteer-core")
+    const chromium = await import("@sparticuz/chromium")
+    browser = await puppeteer.default.launch({
+      args: chromium.default.args,
+      executablePath: await chromium.default.executablePath(),
+      headless: true,
+    })
+  } else {
+    const puppeteer = await import("puppeteer")
+    browser = await puppeteer.default.launch({ headless: true })
+  }
 
   try {
     const page = await browser.newPage()
@@ -225,6 +249,7 @@ export async function generateMemorialPDF(
     await page.setViewport({ width: 816, height: 1056, deviceScaleFactor: 2 })
 
     const html = renderCardPagesHTML(layout, tribute)
+
     await page.setContent(html, { waitUntil: "networkidle0" })
 
     // Wait for all images to load

@@ -41,7 +41,7 @@ export async function sendInviteEmail({
 
           <p style="font-size: 16px; line-height: 1.7; margin-bottom: 24px;">
             ${purchaserName} has invited you to share your memories of <strong>${honoredName}</strong>
-            as part of a tribute card collection — a beautiful keepsake that will be printed and preserved.
+            as part of a Love Card Box — a beautiful keepsake that will be printed and preserved.
           </p>
 
           <p style="font-size: 16px; line-height: 1.7; margin-bottom: 32px;">
@@ -109,7 +109,7 @@ export async function sendNudgeEmail({
 
           <p style="font-size: 16px; line-height: 1.7; margin-bottom: 24px;">
             Just a gentle reminder — ${purchaserName} invited you to share your memories of <strong>${honoredName}</strong>,
-            and we'd love to include your words in the tribute collection.
+            and we'd love to include your words in their Love Card Box.
           </p>
 
           <p style="font-size: 16px; line-height: 1.7; margin-bottom: 32px;">

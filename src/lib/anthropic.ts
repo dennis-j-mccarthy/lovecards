@@ -141,9 +141,9 @@ Return a CardLayoutResponse JSON object with this exact shape:
 export function generateFallbackLayout(
   tribute: TributeWithContributions
 ): CardLayoutResponse {
-  const contributions = tribute.contributions.filter(
-    (c) => c.status === "APPROVED" && !c.isHidden
-  )
+  const contributions = tribute.contributions
+    .filter((c) => c.status === "APPROVED" && !c.isHidden)
+    .sort(() => Math.random() - 0.5) // Randomize card order
 
   const pages: CardPage[] = []
   const CELLS_PER_PAGE = 9

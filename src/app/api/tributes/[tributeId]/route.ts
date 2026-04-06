@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
@@ -13,13 +13,13 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { tributeId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const tribute = await prisma.tribute.findFirst({
-    where: { id: params.tributeId, userId: session.user.id },
+    where: { id: params.tributeId, userId },
     include: {
       template: true,
       contributions: {
@@ -45,6 +45,11 @@ const updateSchema = z.object({
   birthDate: z.string().nullable().optional(),
   passingDate: z.string().nullable().optional(),
   location: z.string().max(100).nullable().optional(),
+  shipToName: z.string().max(100).nullable().optional(),
+  shipToAddress: z.string().max(200).nullable().optional(),
+  shipToCity: z.string().max(100).nullable().optional(),
+  shipToState: z.string().max(50).nullable().optional(),
+  shipToZip: z.string().max(20).nullable().optional(),
   templateId: z.string().nullable().optional(),
   allowAnonymous: z.boolean().optional(),
   isPublic: z.boolean().optional(),
@@ -55,12 +60,12 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: { tributeId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const tribute = await getTributeForOwner(params.tributeId, session.user.id)
+  const tribute = await getTributeForOwner(params.tributeId, userId)
   if (!tribute) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
@@ -90,12 +95,12 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { tributeId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const tribute = await getTributeForOwner(params.tributeId, session.user.id)
+  const tribute = await getTributeForOwner(params.tributeId, userId)
   if (!tribute) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }

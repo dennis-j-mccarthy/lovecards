@@ -12,6 +12,11 @@ interface TributeHeaderProps {
   birthDate: string | null
   passingDate: string | null
   location: string | null
+  shipToName: string | null
+  shipToAddress: string | null
+  shipToCity: string | null
+  shipToState: string | null
+  shipToZip: string | null
 }
 
 export function TributeHeader({
@@ -22,21 +27,26 @@ export function TributeHeader({
   birthDate,
   passingDate,
   location,
+  shipToName,
+  shipToAddress,
+  shipToCity,
+  shipToState,
+  shipToZip,
 }: TributeHeaderProps) {
   const [showEdit, setShowEdit] = useState(false)
 
   return (
     <>
       <div className="mb-8">
-        <p className="text-xs tracking-[2px] uppercase text-[#8b7355] mb-1">
+        <p className="text-xs tracking-[2px] uppercase text-[#800020] mb-1">
           {relationship}
         </p>
         <div className="flex items-center gap-3">
-          <h1 className="text-4xl font-normal text-[#1a1a1a]">{honoredName}</h1>
+          <h1 className="text-4xl font-normal text-[#111827]">{honoredName}</h1>
           <button
             onClick={() => setShowEdit(true)}
-            className="text-[#ccc] hover:text-[#8b7355] transition-colors"
-            aria-label="Edit tribute"
+            className="text-gray-300 hover:text-[#800020] transition-colors"
+            aria-label="Edit Love Card Box"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -45,7 +55,7 @@ export function TributeHeader({
           </button>
         </div>
         {(birthDate || passingDate) && (
-          <p className="text-sm text-[#999] mt-2">
+          <p className="text-sm text-gray-400 mt-2">
             {birthDate ? formatDate(new Date(birthDate)) : ""}
             {birthDate && passingDate ? " — " : ""}
             {passingDate ? formatDate(new Date(passingDate)) : ""}
@@ -62,6 +72,11 @@ export function TributeHeader({
             tributeMessage,
             birthDate: birthDate ? new Date(birthDate).toISOString().split("T")[0] : null,
             location,
+            shipToName,
+            shipToAddress,
+            shipToCity,
+            shipToState,
+            shipToZip,
           }}
           onClose={() => setShowEdit(false)}
         />

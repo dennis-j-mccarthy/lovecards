@@ -2,28 +2,22 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useSession } from "next-auth/react"
+import { useUser } from "@clerk/nextjs"
 
 export default function CheckoutPage() {
-  const { status } = useSession()
+  const { isLoaded, isSignedIn } = useUser()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  if (status === "unauthenticated") {
-    router.push("/sign-in?callbackUrl=/checkout")
+  if (isLoaded && !isSignedIn) {
+    router.push("/sign-in?redirect_url=/checkout")
     return null
   }
 
   async function handleCheckout() {
     setLoading(true)
     setError(null)
-
-    // In dev mode, go to mock checkout instead of real Stripe
-    if (process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEMO_MODE === "true") {
-      router.push("/dev/mock-checkout")
-      return
-    }
 
     try {
       const res = await fetch("/api/checkout", { method: "POST" })
@@ -38,22 +32,21 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f7] flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
+    <div className="bg-white px-6 py-16">
+      <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-10">
-          <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-4" />
-          <h1 className="text-3xl font-normal text-[#1a1a1a] mb-4">
-            Start a Card Box
+          <h1 className="text-3xl font-normal text-[#111827] mb-4">
+            Start a Love Card Box
           </h1>
-          <p className="text-[#666] text-sm leading-relaxed">
-            A beautifully printed collection of tribute cards from everyone who
-            loved them — packaged in a keepsake box.
+          <p className="text-gray-500 text-sm leading-relaxed">
+            A beautifully printed collection of cards from everyone who
+            loves them — packaged in a keepsake box.
           </p>
         </div>
 
         {/* What you get */}
-        <div className="border border-[#d4c5a9] p-6 mb-6">
-          <ul className="space-y-3 text-sm text-[#2d2d2d]">
+        <div className="border border-[#e5e7eb] p-6 mb-6">
+          <ul className="space-y-3 text-sm text-[#1f2937]">
             {[
               "Unlimited contributors via email or shareable link",
               "Text messages, photos, or both per contribution",
@@ -63,7 +56,7 @@ export default function CheckoutPage() {
               "Optional anonymous contributions",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2">
-                <span className="text-[#8b7355] mt-0.5">✦</span>
+                <span className="text-[#800020] mt-0.5">✦</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -72,8 +65,8 @@ export default function CheckoutPage() {
 
         {/* Price */}
         <div className="flex items-baseline justify-between mb-6 px-1">
-          <span className="text-sm text-[#666]">Memorial Tribute Box</span>
-          <span className="text-2xl font-normal text-[#1a1a1a]">$49</span>
+          <span className="text-sm text-gray-500">Love Card Box</span>
+          <span className="text-2xl font-normal text-[#111827]">$49</span>
         </div>
 
         {error && (
@@ -84,14 +77,14 @@ export default function CheckoutPage() {
 
         <button
           onClick={handleCheckout}
-          disabled={loading || status === "loading"}
-          className="w-full bg-[#1a1a1a] text-white py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading || !isLoaded}
+          className="w-full bg-[#111827] text-white py-4 text-sm tracking-[1px] uppercase hover:bg-[#333] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? "Redirecting to payment..." : "Continue to Payment"}
         </button>
 
-        <p className="text-xs text-[#999] text-center mt-4">
-          Secure payment via Stripe. You&apos;ll create your tribute after checkout.
+        <p className="text-xs text-gray-400 text-center mt-4">
+          Secure payment via Stripe. You&apos;ll create your Love Card Box after checkout.
         </p>
 
         {(process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEMO_MODE === "true") && (
@@ -113,8 +106,8 @@ export default function CheckoutPage() {
                 setLoading(false)
               }
             }}
-            disabled={loading || status === "loading"}
-            className="w-full mt-3 border border-dashed border-[#8b7355] text-[#8b7355] py-3 text-xs tracking-[1px] uppercase hover:bg-[#f5f0e8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={loading || !isLoaded}
+            className="w-full mt-3 border border-dashed border-[#800020] text-[#800020] py-3 text-xs tracking-[1px] uppercase hover:bg-[#fdf2f4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Skip Payment (Dev Only)
           </button>

@@ -21,16 +21,16 @@ interface ScenarioGroup {
 const pathNotes: Record<string, string> = {
   "/": "This is where we introduce users to the concept, hopefully self-explanatory. Not visible to normal users, only active here for demo purposes.",
   "/checkout": "This is where the user begins the process of buying a card box, which gives them access to the system. Go ahead and click Continue to Payment — it's simulated and fully functional.",
-  "/checkout/success": "Now the user has purchased access and can begin with their card box creation.",
+  "/checkout/success": "Now the user has purchased access and can begin with their Love Card Box creation.",
 }
 
 // Notes keyed by scenario ID (used when a dev toolbar button navigates to a dynamic route)
 const scenarioNotes: Record<string, string> = {
-  "buyer-with-tribute": "Here is where the user can view sent contributions, invite additional contributors, and even choose designs of their box and cards. Note that the design function isn't working yet.",
+  "buyer-with-tribute": "Here is where the user can view sent contributions, invite additional contributors, and even choose designs of their Love Card Box and cards. Note that the design function isn't working yet.",
   "sample-email": "This email is sent to each contributor — they don't have to log in. They just need to click the button to begin the process of contributing.",
   "sample-nudge": "People being as they are, it will be necessary to remind them repeatedly. Here we also make use of the phone number as a more effective way of nudging people.",
   "contributor": "Users add their avatar (this is important), their basic information, and write their card. If they choose to stay anonymous, their cards won't be visible to other contributors. Click the ? icon for guidelines on what makes a great card, or the arrow to expand tips. They can also add a photo. Note: the cards on the right are from their peers and serve as further inspiration for writing great cards.",
-  "populated-dashboard": "Here we have contributions made for admins to review. This box is about ready to send to the printer. Choose Generate Cards at top right to simulate this.",
+  "populated-dashboard": "Here we have contributions made for admins to review. This Love Card Box is about ready to send to the printer. Choose Generate Cards at top right to simulate this.",
 }
 
 const DEV_SCENARIO_KEY = "dev-last-scenario"
@@ -97,7 +97,7 @@ const groups: ScenarioGroup[] = [
         id: "homepage",
         label: "Homepage",
         description: "Landing page",
-        color: "#8b7355",
+        color: "#800020",
         isLink: true,
         href: "/",
       },
@@ -109,19 +109,19 @@ const groups: ScenarioGroup[] = [
       {
         id: "purchase-sim",
         label: "Purchase Simulation",
-        description: "Pre-purchase → payment → tribute creation",
+        description: "Pre-purchase → payment → Love Card Box creation",
         color: "#c25d45",
       },
       {
         id: "buyer-fresh",
         label: "Fresh Buyer",
-        description: "Post-checkout, create tribute form",
+        description: "Post-checkout, create Love Card Box form",
         color: "#e8785e",
       },
       {
         id: "buyer-with-tribute",
         label: "Empty Buyer Dashboard",
-        description: "Tribute created, no contributions yet",
+        description: "Love Card Box created, no contributions yet",
         color: "#d4922e",
       },
     ],
@@ -242,7 +242,7 @@ export function DevToolbar() {
       <div className="fixed bottom-0 right-0 z-[9999]">
         <button
           onClick={() => setMinimized(false)}
-          className="bg-white border border-[#d4c5a9] border-b-0 border-r-0 text-[#8b7355] text-xs tracking-[1px] uppercase px-4 py-2 rounded-tl-lg hover:bg-[#faf9f7] transition-colors shadow-sm"
+          className="bg-white border border-[#e5e7eb] border-b-0 border-r-0 text-[#800020] text-xs tracking-[1px] uppercase px-4 py-2 rounded-tl-lg hover:bg-white transition-colors shadow-sm"
         >
           Dev Tools
         </button>
@@ -251,24 +251,24 @@ export function DevToolbar() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-white border-t-2 border-[#d4c5a9] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+    <div className="fixed bottom-0 left-0 right-0 z-[9999] bg-white border-t-2 border-[#e5e7eb] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
       <div className="max-w-6xl mx-auto px-6 py-4">
         {/* Header row */}
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-[#1a1a1a] tracking-wide">
-            Development Navigation <span className="font-normal text-[#999]">(only visible in demo mode)</span>
+          <h3 className="text-sm font-medium text-[#111827] tracking-wide">
+            Development Navigation <span className="font-normal text-gray-400">(only visible in demo mode)</span>
           </h3>
           <div className="flex items-center gap-3">
             <button
               onClick={clearDemo}
               disabled={loading !== null}
-              className="text-sm text-[#999] hover:text-red-500 px-3 py-1 border border-[#e8e0d4] rounded hover:border-red-200 transition-colors disabled:opacity-40"
+              className="text-sm text-gray-400 hover:text-red-500 px-3 py-1 border border-[#e8e0d4] rounded hover:border-red-200 transition-colors disabled:opacity-40"
             >
               {loading === "clear" ? "Clearing..." : "Clear Demo Data"}
             </button>
             <button
               onClick={() => setMinimized(true)}
-              className="text-[#bbb] hover:text-[#666] transition-colors p-1"
+              className="text-gray-300 hover:text-gray-500 transition-colors p-1"
               aria-label="Minimize toolbar"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -305,21 +305,21 @@ export function DevToolbar() {
           {groups.map((group, gi) => (
             <div key={group.title} className="flex items-start gap-4 flex-shrink-0">
               {gi > 0 && (
-                <div className="flex items-center pt-6 text-[#d4c5a9]">
+                <div className="flex items-center pt-6 text-[#e5e7eb]">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polyline points="9 6 15 12 9 18" />
                   </svg>
                 </div>
               )}
               <div>
-                <p className="text-[10px] tracking-[2px] uppercase text-[#8b7355] mb-2">
+                <p className="text-[10px] tracking-[2px] uppercase text-[#800020] mb-2">
                   {group.title}
                 </p>
                 <div className="flex gap-2">
                   {group.items.map((s, si) => (
                     <div key={s.id} className="flex items-center gap-2">
                       {si > 0 && (
-                        <span className="text-[#d4c5a9] text-sm">→</span>
+                        <span className="text-[#e5e7eb] text-sm">→</span>
                       )}
                       <button
                         onClick={() =>
@@ -328,17 +328,17 @@ export function DevToolbar() {
                             : runScenario(s.id)
                         }
                         disabled={loading !== null}
-                        className="flex items-center gap-2.5 px-4 py-2.5 border-2 border-[#e8e0d4] rounded-lg bg-white hover:bg-[#f5f0e8] hover:border-[#d4c5a9] transition-all disabled:opacity-40 text-left shadow-sm hover:shadow-md"
+                        className="flex items-center gap-2.5 px-4 py-2.5 border-2 border-[#e8e0d4] rounded-lg bg-white hover:bg-[#fdf2f4] hover:border-[#e5e7eb] transition-all disabled:opacity-40 text-left shadow-sm hover:shadow-md"
                       >
                         <div
                           className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                           style={{ backgroundColor: s.color }}
                         />
                         <div>
-                          <p className="text-sm font-semibold text-[#1a1a1a] leading-tight whitespace-nowrap">
+                          <p className="text-sm font-semibold text-[#111827] leading-tight whitespace-nowrap">
                             {loading === s.id ? "Loading..." : s.label}
                           </p>
-                          <p className="text-[11px] text-[#999] leading-tight whitespace-nowrap">
+                          <p className="text-[11px] text-gray-400 leading-tight whitespace-nowrap">
                             {s.description}
                           </p>
                         </div>
@@ -352,13 +352,13 @@ export function DevToolbar() {
 
           {/* Generate Cards — far right */}
           <div className="flex items-start gap-4 flex-shrink-0 ml-auto">
-            <div className="flex items-center pt-6 text-[#d4c5a9]">
+            <div className="flex items-center pt-6 text-[#e5e7eb]">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="9 6 15 12 9 18" />
               </svg>
             </div>
             <div>
-              <p className="text-[10px] tracking-[2px] uppercase text-[#8b7355] mb-2">
+              <p className="text-[10px] tracking-[2px] uppercase text-[#800020] mb-2">
                 Finish
               </p>
               <button
@@ -370,14 +370,14 @@ export function DevToolbar() {
                   }
                 }}
                 disabled={loading !== null || !pathname.startsWith("/dashboard/")}
-                className="flex items-center gap-2.5 px-4 py-2.5 border-2 border-[#e8e0d4] rounded-lg bg-white hover:bg-[#f5f0e8] hover:border-[#d4c5a9] transition-all disabled:opacity-40 text-left shadow-sm hover:shadow-md"
+                className="flex items-center gap-2.5 px-4 py-2.5 border-2 border-[#e8e0d4] rounded-lg bg-white hover:bg-[#fdf2f4] hover:border-[#e5e7eb] transition-all disabled:opacity-40 text-left shadow-sm hover:shadow-md"
               >
                 <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 bg-[#2d8a4e]" />
                 <div>
-                  <p className="text-sm font-semibold text-[#1a1a1a] leading-tight whitespace-nowrap">
+                  <p className="text-sm font-semibold text-[#111827] leading-tight whitespace-nowrap">
                     Generate Cards
                   </p>
-                  <p className="text-[11px] text-[#999] leading-tight whitespace-nowrap">
+                  <p className="text-[11px] text-gray-400 leading-tight whitespace-nowrap">
                     Send to printer
                   </p>
                 </div>

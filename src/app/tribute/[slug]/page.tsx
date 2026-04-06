@@ -28,15 +28,15 @@ export default async function TributePage({
   const publicContributions = tribute.contributions.map(toPublicContribution)
 
   return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-[#d4c5a9] py-16 px-6">
+      <div className="border-b border-[#e5e7eb] py-16 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <Link href="/">
             <img src="/logo.png" alt="Love Cards" className="h-[200px] mx-auto mb-8" />
           </Link>
           {tribute.honoredPhoto && (
-            <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-[#d4c5a9]">
+            <div className="relative w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-[#e5e7eb]">
               <Image
                 src={tribute.honoredPhoto}
                 alt={tribute.honoredName}
@@ -46,15 +46,15 @@ export default async function TributePage({
             </div>
           )}
 
-          <p className="text-xs tracking-[4px] uppercase text-[#8b7355] mb-3">
+          <p className="text-xs tracking-[4px] uppercase text-[#800020] mb-3">
             In Loving Memory
           </p>
-          <h1 className="text-5xl font-normal text-[#1a1a1a] mb-3">
+          <h1 className="text-5xl font-normal text-[#111827] mb-3">
             {tribute.honoredName}
           </h1>
 
           {(tribute.birthDate || tribute.passingDate) && (
-            <p className="text-sm text-[#999] mb-4">
+            <p className="text-sm text-gray-400 mb-4">
               {tribute.birthDate ? formatDate(tribute.birthDate) : ""}
               {tribute.birthDate && tribute.passingDate ? " — " : ""}
               {tribute.passingDate ? formatDate(tribute.passingDate) : ""}
@@ -62,10 +62,10 @@ export default async function TributePage({
           )}
 
           {tribute.location && (
-            <p className="text-sm text-[#999] mb-6">{tribute.location}</p>
+            <p className="text-sm text-gray-400 mb-6">{tribute.location}</p>
           )}
 
-          <blockquote className="text-base leading-relaxed text-[#555] italic max-w-xl mx-auto border-l-2 border-[#d4c5a9] pl-4 text-left">
+          <blockquote className="text-base leading-relaxed text-[#555] italic max-w-xl mx-auto border-l-2 border-[#e5e7eb] pl-4 text-left">
             {tribute.tributeMessage}
           </blockquote>
         </div>
@@ -84,9 +84,9 @@ export default async function TributePage({
       {/* Gallery */}
       <div className="max-w-5xl mx-auto px-6 py-12">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xl font-normal text-[#1a1a1a]">
+          <h2 className="text-xl font-normal text-[#111827]">
             Memories Shared
-            <span className="ml-2 text-sm text-[#999]">
+            <span className="ml-2 text-sm text-gray-400">
               ({publicContributions.length})
             </span>
           </h2>
@@ -99,7 +99,7 @@ export default async function TributePage({
         />
       </div>
 
-      <footer className="border-t border-[#d4c5a9] py-8 px-6 text-center mt-8">
+      <footer className="border-t border-[#e5e7eb] py-8 px-6 text-center mt-8">
         <Link href="/">
           <img src="/logo.png" alt="Love Cards" className="h-24 mx-auto opacity-60 hover:opacity-100 transition-opacity" />
         </Link>

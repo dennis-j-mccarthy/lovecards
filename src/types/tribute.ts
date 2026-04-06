@@ -28,6 +28,7 @@ export type PublicContribution = {
   contributorName: string | null
   avatarUrl: string | null
   message: string | null
+  citationSource: string | null
   photoUrl: string | null
   createdAt: Date
 }
@@ -40,6 +41,7 @@ export function toPublicContribution(c: Contribution): PublicContribution {
     contributorName: c.isAnonymous ? null : c.contributorName,
     avatarUrl: c.isAnonymous ? null : c.avatarUrl,
     message: c.isHidden ? null : c.message,
+    citationSource: c.isHidden ? null : c.citationSource,
     photoUrl: c.isHidden ? null : c.photoUrl,
     createdAt: c.createdAt,
   }

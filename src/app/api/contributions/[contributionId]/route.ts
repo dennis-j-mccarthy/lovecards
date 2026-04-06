@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getDbUserId } from "@/lib/user"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
@@ -24,12 +24,12 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: { contributionId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const contribution = await getContributionWithOwnerCheck(params.contributionId, session.user.id)
+  const contribution = await getContributionWithOwnerCheck(params.contributionId, userId)
   if (!contribution) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
@@ -52,12 +52,12 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { contributionId: string } }
 ) {
-  const session = await auth()
-  if (!session?.user?.id) {
+  const userId = await getDbUserId()
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const contribution = await getContributionWithOwnerCheck(params.contributionId, session.user.id)
+  const contribution = await getContributionWithOwnerCheck(params.contributionId, userId)
   if (!contribution) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
   }
